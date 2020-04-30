@@ -1,8 +1,8 @@
+
 $(document).ready(function(){
 
   //Initialise Google Charts  
   google.charts.load('current', {packages: ['corechart']});
-
 
 
   //Get Week Array
@@ -10,7 +10,7 @@ $(document).ready(function(){
   for (let i=0;i<7;i++){
     week[i]=getDate(new Date(Date.now() - (6-i)*(1000*60*60*24)))
   }
-  console.log(week)
+  
 
   //Get Month Array
   let month = {}
@@ -19,7 +19,6 @@ $(document).ready(function(){
     date.setMonth(date.getMonth() - (5-i));
     month[i]=getDate(date)
   }
-  console.log(month)
 
   //Date Formatter
   function getDate(date){
@@ -27,99 +26,14 @@ $(document).ready(function(){
   }
 
 
-
-
   getSummary()
   getNews()
   $('#searchBtn').on('click',function(){
-    let selectedCountry=$('#countrySelect').val().toLowerCase()
+    //let selectedCountry=$('SG#countrySelect').val().toLowerCase()
+    let selectedCountry='SG'
     getCountryData(selectedCountry)
 
   })
-
-  //Data Search Total by country
-  function getCountryData(country){
-
-    //Get Country COVID Stats
-    fetch(`https://covid-19-data.p.rapidapi.com/country?format=json&name=${country}`, {
-    	"method": "GET",
-	    "headers": {
-		"x-rapidapi-host": "covid-19-data.p.rapidapi.com",
-		"x-rapidapi-key": "6f139a6db5msh514ccc0a5ccfc61p170643jsn7837b3895756"
-    	}
-    })
-    .then((response) => {
-      return response.json();
-    })
-    .then((data) => {
-      country={}
-      country['country']=data[0].country
-      country['confirmed']=data[0].confirmed
-      country['recovered']=data[0].recovered
-      country['critical']=data[0].critical
-      country['deaths']=data[0].deaths
-      console.log(country)
-      $('#statistics').html(`
-        <ul><h6>${country['country']}</h6>
-          <li>Confirmed: ${country['confirmed']}</li>
-          <li>Recovered: ${country['recovered']}</li>
-          <li>Critical: ${country['critical']}</li>
-          <li>Deaths: ${country['deaths']}</li>
-        </ul>
-        <ul style="list-style-type:none;">
-          <li>% Critical: ${(country['critical']/country['confirmed']*100).toFixed(2)}%</li>
-          <li>% Death: ${(country['deaths']/country['confirmed']*100).toFixed(2)}%</li>
-          <li>% Recovered: ${(country['recovered']/result['confirmed']*100).toFixed(2)}%</li>
-        </ul>
-      `)
-      var optionsWeek = {
-        title: 'Weekly Data',
-        // curveType: 'function',
-        legend: { position: 'bottom' }
-      };
-
-      var weeklyChart = new google.visualization.LineChart(document.getElementById('weeklyChart'));
-
-      google.charts.setOnLoadCallback(weeklyChart.draw(dataWeek, optionsWeek));
-
-      var dataMonth = google.visualization.arrayToDataTable([
-        ['Month', 'Confirmed', 'Dead'],
-        ['2004',  1000,      400],
-        ['2005',  1170,      460],
-        ['2006',  660,       1120],
-        ['2007',  1030,      540]
-      ]);
-
-      var optionsMonth = {
-        title: 'Monthly Data',
-        // curveType: 'function',
-        legend: { position: 'bottom' }
-      };
-
-      var monthlyChart = new google.visualization.LineChart(document.getElementById('monthlyChart'));
-
-
-
-      google.charts.setOnLoadCallback(monthlyChart.draw(dataMonth, optionsMonth));
-    })
-
-    //Get Country Population Stats
-    // fetch("https://countries-cities.p.rapidapi.com/location/country/GB?format=json", {
-    //   "method": "GET",
-    //   "headers": {
-    //     "x-rapidapi-host": "countries-cities.p.rapidapi.com",
-    //     "x-rapidapi-key": "6f139a6db5msh514ccc0a5ccfc61p170643jsn7837b3895756"
-    //   }
-    // })
-    // .then(response => {
-    //   return response.json();
-    // })
-    // .then(data => {
-    //   population={}
-
-    // })
-  }
-
 
 
   //Global Summary
@@ -140,44 +54,153 @@ $(document).ready(function(){
       result['recovered']=data[0].recovered;
       result['critical']=data[0].critical;
       result['deaths']=data[0].deaths;
-      result['active']=result['confirmed']-(result['recovered']+result['critical']+result['deaths'])
+      result['infected']=result['confirmed']-(result['recovered']+result['critical']+result['deaths'])
 
     $('#globalSummary').html(`
       <ul id="globalSummaryList"><h4>${$('#globalSummary').text()}</h4>
-        <li>Confirmed Cases: ${result['confirmed'].toLocaleString()}</li>
-        <li>Critical Cases: ${result['critical'].toLocaleString()}</li>
-        <li>Deaths: ${result['deaths'].toLocaleString()}</li>
-        <li>Recovered Cases: ${result['recovered'].toLocaleString()}</li>
-        
+        <li class="confirmed">Total Confirmed Cases: ${result['confirmed'].toLocaleString()}</li>
+        <li class="critical">Critical Cases: ${result['critical'].toLocaleString()}</li>
+        <li class="deaths">Deaths: ${result['deaths'].toLocaleString()}</li>
+        <li class="recovered">Recovered Cases: ${result['recovered'].toLocaleString()}</li>
       </ul>
       <ul style="list-style-type:none;">
-        <li>% Critical: ${(result['critical']/result['confirmed']*100).toFixed(2)}%</li>
-        <li>% Death: ${(result['deaths']/result['confirmed']*100).toFixed(2)}%</li>
-        <li>% Recovered: ${(result['recovered']/result['confirmed']*100).toFixed(2)}%</li>
+        <li class="infected">% Infected: ${(result['infected']/result['confirmed']*100).toFixed(2)}%</li>
+        <li class="critical">% Critical: ${(result['critical']/result['confirmed']*100).toFixed(2)}%</li>
+        <li class="deaths">% Death: ${(result['deaths']/result['confirmed']*100).toFixed(2)}%</li>
+        <li class="recovered">% Recovered: ${(result['recovered']/result['confirmed']*100).toFixed(2)}%</li>
       </ul>
       `)})
       .then(data=>{
-
       //Pie Chart
-      var data = new google.visualization.DataTable();
-        data.addColumn('string', 'Cases');
-        data.addColumn('number', 'Number of Cases');
-        data.addRows([
-          ['Infected', result['active']],
-          ['Critical Condition', result['critical']],
-          ['Deaths', result['deaths']],
-          ['Recovered', result['recovered']],
-        ]);
-
-
-        var options = {title:'Confirmed Cases', width:300};
-        var chart = new google.visualization.PieChart(document.getElementById('globalPieChart'));
-        google.charts.setOnLoadCallback(chart.draw(data, options));
+      var dataPieGlobal = new google.visualization.DataTable();
+      dataPieGlobal.addColumn('string', 'Cases');
+      dataPieGlobal.addColumn('number', 'Number of Cases');
+      dataPieGlobal.addRows([
+        ['Infected', result['infected']],
+        ['Critical Condition', result['critical']],
+        ['Deaths', result['deaths']],
+        ['Recovered', result['recovered']],
+      ]);
+      var optionsPieGlobal = {title:'Global Infected Cases', width:300};
+      var chartPieGlobal = new google.visualization.PieChart(document.getElementById('globalPieChart'));
+      google.charts.setOnLoadCallback(chartPieGlobal.draw(dataPieGlobal, optionsPieGlobal));
     });
 
     
   }
 
+
+  //Data Search Total by country
+  function getCountryData(country){
+    $.ajax({
+      type: "GET",
+      url: "https://api.smartable.ai/coronavirus/stats/SG",
+      beforeSend: function(xhrObj) {
+        xhrObj.setRequestHeader("Cache-Control", "no-cache");
+        xhrObj.setRequestHeader("Subscription-Key", "476d6785feb94ac1a64d793b3f8fa35b");
+      },
+    })
+    .done(function (data) {
+      countryData={}
+      countryData['country']=data.location.countryOrRegion
+      countryData['confirmed']=data.stats.totalConfirmedCases
+      countryData['deaths']=data.stats.totalDeaths
+      countryData['recovered']=data.stats.totalRecoveredCases
+      countryData['infected']=countryData['confirmed']-countryData['deaths']-countryData['recovered']
+      let totalDays=data.stats.history.length
+      countryData['history'] = []
+      for (let i =0;i<60;i++){
+        countryData['history'][i]=data.stats.history[totalDays-(60-i)]
+      }
+      console.log(countryData['history'][0].date)
+
+      //Statistics Display
+      $('#statistics').html(`
+        <ul><h6>${countryData['country']}</h6>
+          <li class="confirmed">Total Confirmed Cases: ${(countryData['confirmed']).toLocaleString()}</li>
+          <li class="infected">Infected: ${(countryData['infected']).toLocaleString()}</li>
+          <li class="recovered">Recovered: ${(countryData['recovered']).toLocaleString()}</li>
+          <li class="deaths">Deaths: ${(countryData['deaths']).toLocaleString()}</li>
+        </ul>
+        <ul style="list-style-type:none;">
+          <li>% Infected: ${(countryData['infected']/countryData['confirmed']*100).toFixed(2)}%</li>
+          <li>% Death: ${(countryData['deaths']/countryData['confirmed']*100).toFixed(2)}%</li>
+          <li>% Recovered: ${(countryData['recovered']/countryData['confirmed']*100).toFixed(2)}%</li>
+        </ul>
+      `)
+
+      //Pie Chart Display
+      var dataPieCountry = new google.visualization.DataTable();
+      dataPieCountry.addColumn('string', 'Cases');
+      dataPieCountry.addColumn('number', 'Number of Cases');
+      dataPieCountry.addRows([
+        ['Infected', countryData['infected']],
+        ['Deaths', countryData['deaths']],
+        ['Recovered', countryData['recovered']],
+      ]);
+      var optionsPieCountry = {title:`Infected Cases in ${countryData['country']} `, width:300};
+      var chartPieCountry = new google.visualization.PieChart(document.getElementById('countryPieChart'));
+      google.charts.setOnLoadCallback(chartPieCountry.draw(dataPieCountry, optionsPieCountry));
+
+
+      //Line Weekly Graph Display
+      var confirmedDataArray =[['Day', 'Confirmed Cases']]
+      for (let i=0;i<60;i++){
+        let day = countryData['history'][i].date
+        let confirmedCase = countryData['history'][i].confirmed
+        confirmedDataArray[i+1]=[new Date(day),parseInt(confirmedCase)]
+      }
+      var dataConfirmed = google.visualization.arrayToDataTable(confirmedDataArray);
+
+      var optionsConfirmed = {
+        title: 'Confirmed Cases Trend',
+        legend: {position: 'bottom'},
+        width:300
+      };
+
+      var chartConfirmed = new google.visualization.LineChart(document.getElementById('confirmedChart'));
+      google.charts.setOnLoadCallback(chartConfirmed.draw(dataConfirmed, optionsConfirmed));
+
+
+      //Line Monthly Graph Display
+      var newDataArray = [['Day', 'New Cases']]
+      for (let i=1;i<60;i++){
+        let day = countryData['history'][i].date
+        let dayCase = countryData['history'][i].confirmed
+        let ytdCase = countryData['history'][i-1].confirmed
+        newDataArray[i]=[new Date(day),parseInt(dayCase-ytdCase)]
+      }
+      console.log(newDataArray)
+      var dataNew = google.visualization.arrayToDataTable(newDataArray);
+      var optionsNew = {
+        title: 'New Cases Trend',
+        legend: { position: 'bottom' },
+        width:300
+      };
+      var chartNew = new google.visualization.LineChart(document.getElementById('newChart'));
+      google.charts.setOnLoadCallback(chartNew.draw(dataNew, optionsNew));
+
+    })
+    .fail(function () {
+        alert("error");
+    });
+
+    //   
+      
+
+
+
+     
+
+      
+
+        
+
+
+
+   
+
+  }
 
 
   //News Carousel
@@ -215,18 +238,11 @@ $(document).ready(function(){
       $('#caption2 h5').text(article2['sourceName'])
       $('#caption2 p').text(article2['title'])
 
-      var dataWeek = google.visualization.arrayToDataTable([
-        ['Day', 'Confirmed', 'Dead'],
-        ['2004',  1000,      400],
-        ['2005',  1170,      460],
-        ['2006',  660,       1120],
-        ['2007',  1030,      540]
-      ]);
-
+ 
       
 
     })
   }
+  var weeklyArray=[]
 
 });
-

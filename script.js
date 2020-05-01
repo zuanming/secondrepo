@@ -5,36 +5,66 @@ $(document).ready(function(){
   google.charts.load('current', {packages: ['corechart']});
 
 
-  //Get Week Array
-  let week = {}
-  for (let i=0;i<7;i++){
-    week[i]=getDate(new Date(Date.now() - (6-i)*(1000*60*60*24)))
-  }
-  
-
-  //Get Month Array
-  let month = {}
-  for (let i=0;i<6;i++){
-    let date = new Date();
-    date.setMonth(date.getMonth() - (5-i));
-    month[i]=getDate(date)
-  }
-
-  //Date Formatter
-  function getDate(date){
-    return `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`
-  }
-
-
   getSummary()
   getNews()
-  $('#searchBtn').on('click',function(){
-    let selectedCountry=$('#countrySelect').val()
-    $('#newChart').empty()
-    $('#confirmedChart').empty()
-    getCountryData(selectedCountry)
+  var bingKey = `ArL7AHBx0Kg7wgSFzCpA58SuW4YBn0d5cDpDPhk98YI1xp9rn6XZcOwDPzkQrKcZ`
+  var covidMap = L.map('mapid').setView([33, 65], 0);
+  L.tileLayer.bing(bingKey).addTo(covidMap);
+  getMap()
+  
+  
 
+  $('#searchBtn').on('click',function(){
+    if ($('#countrySelect').val() == null){
+      alert('Please select a country!')
+    }else{
+      let selectedCountry=$('#countrySelect').val()
+      $('#newChart').empty()
+      $('#confirmedChart').empty()
+      getCountryData(selectedCountry)
+    }
   })
+
+
+  
+  
+    
+
+  function getMap(){
+    fetch(`https://disease.sh/v2/countries`)
+    .then (response=>{
+      return response.json();
+    })
+    .then(data=>{
+      let dataLength = Object.keys(data).length;
+      for (let i =0;i<dataLength;i++){
+        let countryName=data[i].country
+        let countryLat=data[i].countryInfo.lat
+        let countryLong=data[i].countryInfo.long
+        let countryCases=data[i].cases
+        var circle=L.circle([countryLat, countryLong], {
+          color: 'red',
+          fillColor: '#f03',
+          fillOpacity: 0.5,
+          radius: countryCases,
+        }).addTo(covidMap)
+        circle.bindPopup(`${countryName}: ${countryCases.toLocaleString()} Cases`).addTo(covidMap);
+        circle.on('mouseover', function (e) {
+            this.openPopup();
+        });
+        circle.on('mouseout', function (e) {
+            this.closePopup();
+        });
+        circle.on('click',function(){
+          getCountryData(countryName)
+        })
+        $('#countrySelect').append(`<option id="${countryName}" value="${countryName}">${countryName}</option>`)
+      }
+    })
+
+    
+    
+  }
 
 
   //Global Summary
@@ -93,11 +123,16 @@ $(document).ready(function(){
       countryData={}
       countryData['country']=data.country
       countryData['flag']=data.countryInfo.flag
+      countryData['lat']=data.countryInfo.lat
+      countryData['long']=data.countryInfo.long
       countryData['confirmed']=data.cases
       countryData['deaths']=data.deaths
       countryData['recovered']=data.recovered
       countryData['active']=data.active
       countryData['critical']=data.critical
+
+      //Change Map View
+      covidMap.flyTo([countryData['lat'], countryData['long']], 6);
          //Statistics Display
       $('#statistics').html(`
         <img src="${countryData['flag']}" style="width:50px;height:auto;display:inline;">
@@ -131,15 +166,15 @@ $(document).ready(function(){
 
     })
     
-    fetch(`https://disease.sh/v2/historical?lastdays=90/${country}`)
+    fetch(`https://disease.sh/v2/historical/${country}?lastdays=90`)
     .then(response => {
       return response.json()
     })
     .then(data=>{
       countryData={}
-      countryData['confirmedArray']=data[0].timeline.cases
-      countryData['deathsArray']=data[0].timeline.deaths
-      countryData['recoveredArray']=data[0].timeline.recovered
+      countryData['confirmedArray']=data.timeline.cases
+      countryData['deathsArray']=data.timeline.deaths
+      countryData['recoveredArray']=data.timeline.recovered
 
        // //Line Confirmed Cases Graph Display
       var confirmedDataArray =[['Day', 'Cases','Recovered','Deaths']]

@@ -30,3 +30,6 @@ body {
   height:250px;
   object-fit:cover;
 }
+#mapid { 
+  height: 200px; 
+}

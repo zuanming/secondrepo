@@ -16,12 +16,6 @@
     <!--JQuery-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.min.js"></script>
 
-    <!--ApexChart JS-->
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-
-    <!--Canvas Charts JS-->
-    <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
-
     <!--Google Charts-->
     <script src="https://www.gstatic.com/charts/loader.js"></script>
 
@@ -32,7 +26,7 @@
   <body>
     <!--Header-->
     <div class='container'>
-      <div class='row justify-content-center'  >
+      <div class='row justify-content-center'>
         <h1>COVID-19 Updates</h1>
         <img src=''>
       </div>
@@ -42,65 +36,64 @@
     <div class='container'>
       <div class='row'>
         <!--Latest News (Summary)-->
-        <div class='col-5'>
-          <div id='globalSummary'>
+        <div id='globalSummary' class='col-lg-6 col-12 justify-content-center'>
           Global Summary
-          </div>
-          <div id='globalPieChart'>
-          </div>
+        </div>
+        <div id='globalPieChart' class='col-lg-6 col-12'>
         </div>
 
         <!--Latest News (Carousel)-->
-        <div class='col-7'>
-          <div id="newsCarousel" class="carousel slide" data-ride="carousel">
-            <ol class="carousel-indicators">
-              <li data-target="#newsCarousel" data-slide-to="0" class="active"></li>
-              <li data-target="#newsCarousel" data-slide-to="1"></li>
-              <li data-target="#newsCarousel" data-slide-to="2"></li>
-            </ol>
-            <div class="carousel-inner">
-              <div class="carousel-item active">
-                <img id="img0" class="d-block w-100" src="" alt="First slide">
-                <div id="caption0" class="carousel-caption d-none d-md-block">
-                  <h5>Caption 0</h5>
-                  <p></p>
-                </div>
-              </div>
-              <div class="carousel-item">
-                <img id="img1" class="d-block w-100" src="" alt="Second slide">
-                <div id="caption1" class="carousel-caption d-none d-md-block">
-                  <h5>Caption 1</h5>
-                  <p></p>
-                </div>
-              </div>
-              <div class="carousel-item">
-                <img id="img2" class="d-block w-100" src="" alt="Third slide">
-                <div id="caption2" class="carousel-caption d-none d-md-block">
-                  <h5>Caption 2</h5>
-                  <p></p>
-                </div>
+
+        <div id="newsCarousel" class="carousel slide" data-ride="carousel">
+          <ol class="carousel-indicators">
+            <li data-target="#newsCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#newsCarousel" data-slide-to="1"></li>
+            <li data-target="#newsCarousel" data-slide-to="2"></li>
+          </ol>
+          <div class="carousel-inner">
+            <div class="carousel-item active" style=:"width:100%">
+              <a id="img0Link" href="" target="_blank"style=:"height:100%">
+              <img id="img0" class="d-block w-100 carouselimg" src="" alt="First slide">
+              <div id="caption0" class="carousel-caption d-none d-md-block">
+                <h5 id="caption0">Caption 0</h5>
+                <p id="description0"></p>
               </div>
             </div>
-            <a class="carousel-control-prev" href="#newsCarousel" role="button" data-slide="prev">
-              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-              <span class="sr-only">Previous</span>
-            </a>
-            <a class="carousel-control-next" href="#newsCarousel" role="button" data-slide="next">
-              <span class="carousel-control-next-icon" aria-hidden="true"></span>
-              <span class="sr-only">Next</span>
-            </a>
+            <div class="carousel-item" style=:"width:100%">
+              <a id="img1Link" href="" target="_blank" style=:"height:100%">
+              <img id="img1" class="d-block w-100 carouselimg" src="" alt="Second slide">
+              <div class="carousel-caption d-none d-md-block">
+                <h5 id="caption1">Caption 1</h5>
+                <p id="description1"></p>
+              </div>
+            </div>
+            <div class="carousel-item" style=:"width:100%">
+              <a id="img2Link" href="" target="_blank" style=:"height:100%">
+              <img id="img2" class="d-block w-100 carouselimg" src="" alt="Third slide">
+              <div class="carousel-caption d-none d-md-block">
+                <h5 id="caption2">Caption 2</h5>
+                <p id="description2"></p>
+              </div>
+            </div>
           </div>
-
+          <a class="carousel-control-prev" href="#newsCarousel" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a class="carousel-control-next" href="#newsCarousel" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+          </a>
         </div>
       </div>
     </div>
 
     <!--Search-->
-    <div class='container'>
-      <div class='container'>
+    <div class='container' style="padding-top:20px;padding-bottom:50px; ">
+      <div class='row'>
         <!--Country Select-->
           <select name="countrySelect" size="1" id="countrySelect">
-            <option value="">-Select A Country-</option>
+            <option value="">Select Country</option>
             <option value="Afganistan">Afghanistan</option>
             <option value="Albania">Albania</option>
             <option value="Algeria">Algeria</option>
@@ -108,7 +101,7 @@
             <option value="Andorra">Andorra</option>
             <option value="Angola">Angola</option>
             <option value="Anguilla">Anguilla</option>
-            <!-- <option value="Antigua & Barbuda">Antigua & Barbuda</option> -->
+            <option value="Antigua & Barbuda">Antigua & Barbuda</option>
             <option value="Argentina">Argentina</option>
             <option value="Armenia">Armenia</option>
             <option value="Aruba">Aruba</option>
@@ -348,20 +341,24 @@
             <option value="Zambia">Zambia</option>
             <option value="Zimbabwe">Zimbabwe</option>
           </select>
-          <button id='searchBtn'>Search!</button>
+          <div style="padding-left:20px">
+            <button id='searchBtn'>Search!</button>
+          </div>
       </div>
     </div>
 
     <!--Data Display -->
     <div class='container'>
+      <div class='row '>
+          <div id='statistics' class="col-lg-6 col-12">
+          </div>
+          <div id="countryPieChart" class="col-lg-6 col-12">
+          </div>
+      </div>
       <div class='row'>
-          <div id='statistics'>
-          </div>
-          <div id="countryPieChart">
-          </div>
-          <div id="confirmedChart">
+          <div id="confirmedChart" class="chart">
           </div> 
-          <div id="newChart">
+          <div id="newChart" class="chart">
           </div>
       </div>
     </div>

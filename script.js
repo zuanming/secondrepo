@@ -29,8 +29,9 @@ $(document).ready(function(){
   getSummary()
   getNews()
   $('#searchBtn').on('click',function(){
-    //let selectedCountry=$('SG#countrySelect').val().toLowerCase()
-    let selectedCountry='SG'
+    let selectedCountry=$('#countrySelect').val()
+    $('#newChart').empty()
+    $('#confirmedChart').empty()
     getCountryData(selectedCountry)
 
   })
@@ -38,23 +39,17 @@ $(document).ready(function(){
 
   //Global Summary
   function getSummary(){
-    fetch("https://covid-19-data.p.rapidapi.com/totals?format=json", {
-      "method": "GET",
-      "headers": {
-        "x-rapidapi-host": "covid-19-data.p.rapidapi.com",
-        "x-rapidapi-key": "6f139a6db5msh514ccc0a5ccfc61p170643jsn7837b3895756"
-    	}
-    })
+    fetch("https://disease.sh/v2/all")
     .then((response) => {
       return response.json();
     })
     .then((data) => {
       result={}
-      result['confirmed']=data[0].confirmed;
-      result['recovered']=data[0].recovered;
-      result['critical']=data[0].critical;
-      result['deaths']=data[0].deaths;
-      result['infected']=result['confirmed']-(result['recovered']+result['critical']+result['deaths'])
+      result['confirmed']=data.cases;
+      result['recovered']=data.recovered;
+      result['critical']=data.critical;
+      result['deaths']=data.deaths;
+      result['active']=data.active;
 
     $('#globalSummary').html(`
       <ul id="globalSummaryList"><h4>${$('#globalSummary').text()}</h4>
@@ -63,12 +58,6 @@ $(document).ready(function(){
         <li class="deaths">Deaths: ${result['deaths'].toLocaleString()}</li>
         <li class="recovered">Recovered Cases: ${result['recovered'].toLocaleString()}</li>
       </ul>
-      <ul style="list-style-type:none;">
-        <li class="infected">% Infected: ${(result['infected']/result['confirmed']*100).toFixed(2)}%</li>
-        <li class="critical">% Critical: ${(result['critical']/result['confirmed']*100).toFixed(2)}%</li>
-        <li class="deaths">% Death: ${(result['deaths']/result['confirmed']*100).toFixed(2)}%</li>
-        <li class="recovered">% Recovered: ${(result['recovered']/result['confirmed']*100).toFixed(2)}%</li>
-      </ul>
       `)})
       .then(data=>{
       //Pie Chart
@@ -76,12 +65,16 @@ $(document).ready(function(){
       dataPieGlobal.addColumn('string', 'Cases');
       dataPieGlobal.addColumn('number', 'Number of Cases');
       dataPieGlobal.addRows([
-        ['Infected', result['infected']],
+        ['Active', result['active']],
         ['Critical Condition', result['critical']],
         ['Deaths', result['deaths']],
         ['Recovered', result['recovered']],
       ]);
-      var optionsPieGlobal = {title:'Global Infected Cases', width:300};
+      var optionsPieGlobal = {
+        title:'Global Infected Cases', 
+        width:500,
+        backgroundColor:{fill:'none'},
+      };
       var chartPieGlobal = new google.visualization.PieChart(document.getElementById('globalPieChart'));
       google.charts.setOnLoadCallback(chartPieGlobal.draw(dataPieGlobal, optionsPieGlobal));
     });
@@ -92,115 +85,109 @@ $(document).ready(function(){
 
   //Data Search Total by country
   function getCountryData(country){
-    $.ajax({
-      type: "GET",
-      url: "https://api.smartable.ai/coronavirus/stats/SG",
-      beforeSend: function(xhrObj) {
-        xhrObj.setRequestHeader("Cache-Control", "no-cache");
-        xhrObj.setRequestHeader("Subscription-Key", "476d6785feb94ac1a64d793b3f8fa35b");
-      },
+    fetch(`https://disease.sh/v2/countries/${country}`)
+    .then(response => {
+      return response.json()
     })
-    .done(function (data) {
+    .then(data=>{
       countryData={}
-      countryData['country']=data.location.countryOrRegion
-      countryData['confirmed']=data.stats.totalConfirmedCases
-      countryData['deaths']=data.stats.totalDeaths
-      countryData['recovered']=data.stats.totalRecoveredCases
-      countryData['infected']=countryData['confirmed']-countryData['deaths']-countryData['recovered']
-      let totalDays=data.stats.history.length
-      countryData['history'] = []
-      for (let i =0;i<60;i++){
-        countryData['history'][i]=data.stats.history[totalDays-(60-i)]
-      }
-      console.log(countryData['history'][0].date)
-
-      //Statistics Display
+      countryData['country']=data.country
+      countryData['flag']=data.countryInfo.flag
+      countryData['confirmed']=data.cases
+      countryData['deaths']=data.deaths
+      countryData['recovered']=data.recovered
+      countryData['active']=data.active
+      countryData['critical']=data.critical
+         //Statistics Display
       $('#statistics').html(`
-        <ul><h6>${countryData['country']}</h6>
+        <img src="${countryData['flag']}" style="width:50px;height:auto;display:inline;">
+        <h6 style="display:inline;">${countryData['country']}</h6>
+        <ul>
           <li class="confirmed">Total Confirmed Cases: ${(countryData['confirmed']).toLocaleString()}</li>
-          <li class="infected">Infected: ${(countryData['infected']).toLocaleString()}</li>
+          <li class="active">Active: ${(countryData['active']).toLocaleString()}</li>
+          <li class="critical">Critical: ${(countryData['critical']).toLocaleString()}</li>
           <li class="recovered">Recovered: ${(countryData['recovered']).toLocaleString()}</li>
           <li class="deaths">Deaths: ${(countryData['deaths']).toLocaleString()}</li>
         </ul>
-        <ul style="list-style-type:none;">
-          <li>% Infected: ${(countryData['infected']/countryData['confirmed']*100).toFixed(2)}%</li>
-          <li>% Death: ${(countryData['deaths']/countryData['confirmed']*100).toFixed(2)}%</li>
-          <li>% Recovered: ${(countryData['recovered']/countryData['confirmed']*100).toFixed(2)}%</li>
-        </ul>
       `)
 
-      //Pie Chart Display
+      // Pie Chart Display
       var dataPieCountry = new google.visualization.DataTable();
       dataPieCountry.addColumn('string', 'Cases');
       dataPieCountry.addColumn('number', 'Number of Cases');
       dataPieCountry.addRows([
-        ['Infected', countryData['infected']],
-        ['Deaths', countryData['deaths']],
+        ['Active', countryData['active']],
+        ['Critical', countryData['critical']],
         ['Recovered', countryData['recovered']],
+        ['Deaths', countryData['deaths']],
       ]);
-      var optionsPieCountry = {title:`Infected Cases in ${countryData['country']} `, width:300};
+      var optionsPieCountry = {
+        title:`Cases in ${countryData['country']} `,
+        width:500,
+        backgroundColor:{fill:'none'},
+      };
       var chartPieCountry = new google.visualization.PieChart(document.getElementById('countryPieChart'));
       google.charts.setOnLoadCallback(chartPieCountry.draw(dataPieCountry, optionsPieCountry));
 
+    })
+    
+    fetch(`https://disease.sh/v2/historical?lastdays=90/${country}`)
+    .then(response => {
+      return response.json()
+    })
+    .then(data=>{
+      countryData={}
+      countryData['confirmedArray']=data[0].timeline.cases
+      countryData['deathsArray']=data[0].timeline.deaths
+      countryData['recoveredArray']=data[0].timeline.recovered
 
-      //Line Weekly Graph Display
-      var confirmedDataArray =[['Day', 'Confirmed Cases']]
-      for (let i=0;i<60;i++){
-        let day = countryData['history'][i].date
-        let confirmedCase = countryData['history'][i].confirmed
-        confirmedDataArray[i+1]=[new Date(day),parseInt(confirmedCase)]
+       // //Line Confirmed Cases Graph Display
+      var confirmedDataArray =[['Day', 'Cases','Recovered','Deaths']]
+      for (let i=0;i<90;i++){
+        let date=Object.keys(countryData['confirmedArray'])[i]
+        let cases=countryData['confirmedArray'][Object.keys(countryData['confirmedArray'])[i]]
+        let deaths=countryData['deathsArray'][Object.keys(countryData['deathsArray'])[i]]
+        let recovered=countryData['recoveredArray'][Object.keys(countryData['recoveredArray'])[i]]
+        confirmedDataArray[i+1]=[new Date(date),parseInt(cases),parseInt(recovered),parseInt(deaths)]
       }
+
       var dataConfirmed = google.visualization.arrayToDataTable(confirmedDataArray);
 
       var optionsConfirmed = {
-        title: 'Confirmed Cases Trend',
+        title: 'Total Cases',
         legend: {position: 'bottom'},
-        width:300
+        backgroundColor:{fill:'none'},
       };
 
       var chartConfirmed = new google.visualization.LineChart(document.getElementById('confirmedChart'));
       google.charts.setOnLoadCallback(chartConfirmed.draw(dataConfirmed, optionsConfirmed));
 
+  
 
-      //Line Monthly Graph Display
-      var newDataArray = [['Day', 'New Cases']]
-      for (let i=1;i<60;i++){
-        let day = countryData['history'][i].date
-        let dayCase = countryData['history'][i].confirmed
-        let ytdCase = countryData['history'][i-1].confirmed
-        newDataArray[i]=[new Date(day),parseInt(dayCase-ytdCase)]
+      //Line New Cases Graph Display
+      var newDataArray = [['Day', 'Cases','Deaths','Recovered']]
+      for (let i=1;i<90;i++){
+        let date=Object.keys(countryData['confirmedArray'])[i]
+        let cases=countryData['confirmedArray'][Object.keys(countryData['confirmedArray'])[i]]-countryData['confirmedArray'][Object.keys(countryData['confirmedArray'])[i-1]]
+        let deaths=countryData['deathsArray'][Object.keys(countryData['deathsArray'])[i]]-countryData['deathsArray'][Object.keys(countryData['deathsArray'])[i-1]]
+        let recovered=countryData['recoveredArray'][Object.keys(countryData['recoveredArray'])[i]]-countryData['recoveredArray'][Object.keys(countryData['recoveredArray'])[i-1]]
+        newDataArray[i]=[new Date(date),parseInt(cases),parseInt(recovered),parseInt(deaths)]
       }
-      console.log(newDataArray)
+    
       var dataNew = google.visualization.arrayToDataTable(newDataArray);
       var optionsNew = {
-        title: 'New Cases Trend',
+        title: 'New Cases',
         legend: { position: 'bottom' },
-        width:300
+        backgroundColor:{fill:'none'},
       };
       var chartNew = new google.visualization.LineChart(document.getElementById('newChart'));
       google.charts.setOnLoadCallback(chartNew.draw(dataNew, optionsNew));
-
     })
-    .fail(function () {
-        alert("error");
-    });
-
-    //   
-      
-
-
-
-     
-
-      
-
-        
-
-
-
-   
-
+    .catch(fail =>{
+      alert('Error!')
+    })
   }
+  
 
 
   //News Carousel
@@ -210,37 +197,39 @@ $(document).ready(function(){
       return response.json();
     })
     .then((data) => {
-      // console.log(data)
       article0={}
       article0['sourceName']=data.articles[0].source.name;
       article0['author']=data.articles[0].author;
       article0['title']=data.articles[0].title;
+      article0['url']=data.articles[0].url; 
       article0['image']=data.articles[0].urlToImage
       $('#img0').attr('src',article0['image'])
-      $('#caption0 h5').text(article0['sourceName'])
-      $('#caption0 p').text(article0['title'])
+      $('#caption0').text(article0['sourceName'])
+      $('#description0').text(article0['title'])
+      $('#img0Link').attr('href',article0['url']) 
       
       article1={}
       article1['sourceName']=data.articles[1].source.name;
       article1['author']=data.articles[1].author;
       article1['title']=data.articles[1].title;
+      article1['url']=data.articles[1].url;
       article1['image']=data.articles[1].urlToImage
       $('#img1').attr('src',article1['image'])
-      $('#caption1 h5').text(article1['sourceName'])
-      $('#caption1 p').text(article1['title'])
+      $('#caption1').text(article1['sourceName'])
+      $('#description1').text(article1['title'])
+      $('#img1Link').attr('href',article1['url'])
 
       article2={}
       article2['sourceName']=data.articles[2].source.name;
       article2['author']=data.articles[2].author;
       article2['title']=data.articles[2].title;
+      article2['url']=data.articles[2].url;
       article2['image']=data.articles[2].urlToImage
       $('#img2').attr('src',article2['image'])
-      $('#caption2 h5').text(article2['sourceName'])
-      $('#caption2 p').text(article2['title'])
-
+      $('#caption2').text(article2['sourceName'])
+      $('#description2').text(article2['title'])
+      $('#img2Link').attr('href',article2['url'])
  
-      
-
     })
   }
   var weeklyArray=[]

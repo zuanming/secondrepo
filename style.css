@@ -6,13 +6,8 @@ body {
   background-attachment: fixed;
   color: black;
 }
-.chart {
-  width:100%;
-  /* max-width: 650px; */
-  margin: 35px auto;
-}
 .critical{
-  color:goldenrod;
+  color:darkgoldenrod;
 }
 .recovered{
   color:#34A853;
@@ -47,16 +42,18 @@ body {
   width:120px;
   height:auto;
   margin:10px;
-  vertical-align: middle;
+  vertical-align: middle !important;
   float: left;
 }
 .news{
+  width:100%;
   border:solid;
   border-radius: 20px;
   border-width:1px;
   margin-top:10px !important;
-  background-color:rgba(255, 255, 255, 255,.95) !important;
-  vertical-align: middle;
+  margin-right:0px !important;
+  margin-left:0px !important;
+  background-color:rgba(255, 255, 255, 255,0.9) !important;
   display:table;
 }
 .caption{
@@ -77,4 +74,24 @@ a:hover{
 }
 .caption{
   font-size:90%;
+}
+.chartWrapper{
+  position: relative;
+  padding-right: 100%;
+  width: 0;
+  overflow:hidden;
+}
+.chart {
+  top: 0;
+  left: 0;
+  height:100%;
+  width:250px;
+  margin: 15px;
+}
+.chartv {
+
+  margin-bottom: 40px;
+}
+.row{
+  justify-content:center;
 }

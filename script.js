@@ -4,8 +4,6 @@ $(document).ready(function(){
   //Initialise Google Charts  
   google.charts.load('current', {packages: ['corechart']});
 
-  let countryArray=[]
-  getCountries()
 
   getSummary()
   getNews()
@@ -26,31 +24,11 @@ $(document).ready(function(){
       $('#confirmedChart').empty()
       getCountryData(selectedCountry)
       $('html,body').animate({
-        scrollTop: $("#mapid").offset().top},
+        scrollTop: $("#mapid").offset().top-25},
         'slow');
     }
   })
 
-
-  function getCountries(){
-    fetch(`https://disease.sh/v2/historical`)
-    .then (response=>{
-      return response.json();
-    })
-    .then(data=>{
-      let countryLength = Object.keys(data).length;
-      for (let i =0;i<countryLength;i++){
-        let countryName=data[i].country
-        let countryProvince=data[i].province
-        if (countryProvince==null){
-          countryArray[i]=countryName
-        }
-      }
-    })
-  }
-
-  
-  
     
 
   function getMap(){
@@ -324,3 +302,4 @@ $(document).ready(function(){
   var weeklyArray=[]
 
 });
+

@@ -45,7 +45,7 @@
     <div class='container-fluid'>
 
       <!-- Header Title -->
-      <div class='row justify-content-center'>
+      <div class='row'>
         <h1>COVID-19 Statistics</h1>
       </div>
 
@@ -56,21 +56,23 @@
       <div class='row'>
 
         <!--Global Summary Statistics-->
-        <div id='globalSummary' class='col-xl-3 col-lg-6 col-md-6 col-12 '>
+        <div id='globalSummary' class='col-xl-4 col-lg-5 col-md-8 col-sm-8 col-xs-10 '>
           Global Summary
           <!-- Other Information by JS Fetch -->
         </div>
 
         <!-- Global Summary Pie Chart -->
-        <div class=' col-xl-4 col-lg-6 col-md-6 col-12'>
-          <div id='globalPieChart'>
-            <!-- Pie Chart by JS Fetch -->
+        <div class=' col-xl-4 col-lg-7 col-md-8 col-sm-10 col-xs-10'>
+          <div class="chartWrapper">
+            <div id='globalPieChart' class="chart">
+              <!-- Pie Chart by JS Fetch -->
+            </div>
           </div>
         </div>
 
 
         <!-- Global News Carousel (Large) -->
-        <div class='col-xl-5 d-none d-xl-block'>
+        <div class='col-xl-4 d-none d-xl-block'>
           <div id="newsCarousel" class="carousel slide" data-ride="carousel">
             <ol class="carousel-indicators">
               <li data-target="#newsCarousel" data-slide-to="0" class="active"></li>
@@ -113,41 +115,41 @@
             </a>
           </div>
         </div>
-
+      </div>
+      
+      <div class="container">
         <!-- Global News Container (Small) -->
         <div class='col-lg-12 col-md-12 col-12 d-block d-xl-none'>
           <div id="news0" class="news row my-auto">
             <div>
-
               <img id="newsImage0" class="imageSmall" src="" alt="News Image 0">
               <a id="newsLink0" href=""> 
                 <h5 id="newsHead0"></h5>
-                <p id="newsContent0"><p>   
               </a>
+              <p id="newsContent0"><p>   
             </div>
           </div>
           <div id="news1" class="news row my-auto">
             <div >
-
               <img id="newsImage1" class="imageSmall" src="" alt="News Image 1">
               <a id="newsLink1" href="")> 
                 <h5 id="newsHead1"></h5>
-                <p id="newsContent1"><p>
               </a>
+              <p id="newsContent1"><p>
               </p>
             </div>
           </div>
           <div id="news2" class="news row my-auto">
             <div>
-
               <img id="newsImage2" class="imageSmall" src="" alt="News Image 2">
               <a id="newsLink2" href=""> 
                 <h5 id="newsHead2"></h5>
-                <p id="newsContent2"><p>
               </a>
+              <p id="newsContent2"><p>
             </div>
           </div>
         </div>
+
       </div>
     </div>
       
@@ -161,8 +163,9 @@
     <!--Search-->
     <div class='container' style="padding-top:20px;padding-bottom:50px; ">
       <div class='row'>
+        <div class="col-xl-10 col-lg-10 col-md-10 col-sm-10 col-xs-10">
         <!--Country Select-->
-          <select name="countrySelect" size="1" id="countrySelect">
+          <select name="countrySelect" size="1" id="countrySelect" style="float:left;">
             <option value="" selected disabled>Select Country</option>
             <option id="Afghanistan" value="Afghanistan">Afghanistan</option>
             <option id="Algeria" value="Algeria">Algeria</option>
@@ -351,23 +354,32 @@
           <div style="padding-left:20px">
             <button id='searchBtn'>Search!</button>
           </div>
+        </div>
       </div>
     </div>
 
     <!--Data Display -->
     <div class='container' style="min-height:500px;">
       <div class='row '>
-          <div id='statistics' class="col-md-6 col-12">
+          <div id='statistics' class="col-xl-5 col-lg-5 col-md-8 col-sm-8 col-xs-10">
           </div>
-          <div id="countryPieChart" class="col-md-6 col-12">
+          <div class="col-xl-5 col-lg-7 col-md-8 col-sm-10 col-xs-10">
+            <div class="chartWrapper">
+              <div id="countryPieChart" class="chart">
+              </div>
+            </div>
           </div>
       </div>
       <div class='row'>
-          <div id="confirmedChart" class="chart">
+        <div class="">
+          <div id="confirmedChart" class="chartv col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
           </div> 
-          <div id="newChart" class="chart">
+        </div>
+        <div class="">
+          <div id="newChart" class="chartv col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
           </div>
-      </div>
+        </div>
+
     </div>
 
     <script src="script.js"></script>

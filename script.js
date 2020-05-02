@@ -4,6 +4,8 @@ $(document).ready(function(){
   //Initialise Google Charts  
   google.charts.load('current', {packages: ['corechart']});
 
+  let countryArray=[]
+  getCountries()
 
   getSummary()
   getNews()
@@ -11,6 +13,7 @@ $(document).ready(function(){
   var covidMap = L.map('mapid').setView([33, 65], 0);
   L.tileLayer.bing(bingKey).addTo(covidMap);
   getMap()
+
   
   
 
@@ -22,9 +25,29 @@ $(document).ready(function(){
       $('#newChart').empty()
       $('#confirmedChart').empty()
       getCountryData(selectedCountry)
+      $('html,body').animate({
+        scrollTop: $("#mapid").offset().top},
+        'slow');
     }
   })
 
+
+  function getCountries(){
+    fetch(`https://disease.sh/v2/historical`)
+    .then (response=>{
+      return response.json();
+    })
+    .then(data=>{
+      let countryLength = Object.keys(data).length;
+      for (let i =0;i<countryLength;i++){
+        let countryName=data[i].country
+        let countryProvince=data[i].province
+        if (countryProvince==null){
+          countryArray[i]=countryName
+        }
+      }
+    })
+  }
 
   
   
@@ -49,20 +72,18 @@ $(document).ready(function(){
           radius: countryCases,
         }).addTo(covidMap)
         circle.bindPopup(`${countryName}: ${countryCases.toLocaleString()} Cases`).addTo(covidMap);
-        circle.on('mouseover', function (e) {
+        
+        circle.on('mouseover', function () {
             this.openPopup();
         });
-        circle.on('mouseout', function (e) {
+        circle.on('mouseout', function () {
             this.closePopup();
         });
-        circle.on('click',function(){
-          getCountryData(countryName)
-        })
-        $('#countrySelect').append(`<option id="${countryName}" value="${countryName}">${countryName}</option>`)
       }
+      
     })
 
-    
+        
     
   }
 
@@ -84,6 +105,7 @@ $(document).ready(function(){
     $('#globalSummary').html(`
       <ul id="globalSummaryList"><h4>${$('#globalSummary').text()}</h4>
         <li class="confirmed">Total Confirmed Cases: ${result['confirmed'].toLocaleString()}</li>
+        <li class="active">Active Cases: ${result['active'].toLocaleString()}</li>
         <li class="critical">Critical Cases: ${result['critical'].toLocaleString()}</li>
         <li class="deaths">Deaths: ${result['deaths'].toLocaleString()}</li>
         <li class="recovered">Recovered Cases: ${result['recovered'].toLocaleString()}</li>
@@ -96,14 +118,18 @@ $(document).ready(function(){
       dataPieGlobal.addColumn('number', 'Number of Cases');
       dataPieGlobal.addRows([
         ['Active', result['active']],
-        ['Critical Condition', result['critical']],
+        ['Critical', result['critical']],
         ['Deaths', result['deaths']],
         ['Recovered', result['recovered']],
       ]);
       var optionsPieGlobal = {
-        title:'Global Infected Cases', 
+        title:'Global Infected Cases',
+        is3D:true,
         width:500,
         backgroundColor:{fill:'none'},
+        chartArea:{left:5,top:0,width:'75%',height:'100%'},
+        legendTextStyle:{fontSize: 15},
+        slices: [{color: '#4285F4'}, {color: '#FBBC05'}, {color: '#EA4335'}, {color: '#34A853'}]
       };
       var chartPieGlobal = new google.visualization.PieChart(document.getElementById('globalPieChart'));
       google.charts.setOnLoadCallback(chartPieGlobal.draw(dataPieGlobal, optionsPieGlobal));
@@ -133,11 +159,21 @@ $(document).ready(function(){
 
       //Change Map View
       covidMap.flyTo([countryData['lat'], countryData['long']], 6);
+
+      var marker=L.marker([countryData['lat'], countryData['long']]).addTo(covidMap)
+
+      marker.bindPopup(`${countryData['country']}: ${countryData['confirmed'].toLocaleString()} Cases`)
+      marker.on('mouseover', function () {
+        this.openPopup();
+      });
+      marker.on('mouseout', function () {
+        this.closePopup();
+      });
          //Statistics Display
       $('#statistics').html(`
-        <img src="${countryData['flag']}" style="width:50px;height:auto;display:inline;">
-        <h6 style="display:inline;">${countryData['country']}</h6>
-        <ul>
+        
+        <ul><img src="${countryData['flag']}" style="height:80px;width:auto;margin-bottom:10px;">
+          <h5 style="">${countryData['country']}</h5>
           <li class="confirmed">Total Confirmed Cases: ${(countryData['confirmed']).toLocaleString()}</li>
           <li class="active">Active: ${(countryData['active']).toLocaleString()}</li>
           <li class="critical">Critical: ${(countryData['critical']).toLocaleString()}</li>
@@ -153,13 +189,17 @@ $(document).ready(function(){
       dataPieCountry.addRows([
         ['Active', countryData['active']],
         ['Critical', countryData['critical']],
-        ['Recovered', countryData['recovered']],
         ['Deaths', countryData['deaths']],
+        ['Recovered', countryData['recovered']],
       ]);
       var optionsPieCountry = {
         title:`Cases in ${countryData['country']} `,
+        is3D:true,
         width:500,
         backgroundColor:{fill:'none'},
+        chartArea:{left:5,top:0,width:'75%',height:'100%'},
+        legendTextStyle:{fontSize: 15},
+        slices: [{color: '#4285F4'}, {color: '#FBBC05'}, {color: '#EA4335'}, {color: '#34A853'}]
       };
       var chartPieCountry = new google.visualization.PieChart(document.getElementById('countryPieChart'));
       google.charts.setOnLoadCallback(chartPieCountry.draw(dataPieCountry, optionsPieCountry));
@@ -175,6 +215,7 @@ $(document).ready(function(){
       countryData['confirmedArray']=data.timeline.cases
       countryData['deathsArray']=data.timeline.deaths
       countryData['recoveredArray']=data.timeline.recovered
+
 
        // //Line Confirmed Cases Graph Display
       var confirmedDataArray =[['Day', 'Cases','Recovered','Deaths']]
@@ -241,7 +282,12 @@ $(document).ready(function(){
       $('#img0').attr('src',article0['image'])
       $('#caption0').text(article0['sourceName'])
       $('#description0').text(article0['title'])
-      $('#img0Link').attr('href',article0['url']) 
+      $('#img0Link').attr('href',article0['url'])
+      $('#newsImage0').attr('src',article0['image'])
+      $('#newsHead0').text(article0['sourceName'])
+      $('#newsContent0').text(article0['title'])
+      $('#newsLink0').attr('href',article0['url']) 
+      
       
       article1={}
       article1['sourceName']=data.articles[1].source.name;
@@ -253,6 +299,10 @@ $(document).ready(function(){
       $('#caption1').text(article1['sourceName'])
       $('#description1').text(article1['title'])
       $('#img1Link').attr('href',article1['url'])
+      $('#newsImage1').attr('src',article1['image'])
+      $('#newsHead1').text(article1['sourceName'])
+      $('#newsContent1').text(article1['title'])
+      $('#newsLink1').attr('href',article1['url']) 
 
       article2={}
       article2['sourceName']=data.articles[2].source.name;
@@ -264,6 +314,10 @@ $(document).ready(function(){
       $('#caption2').text(article2['sourceName'])
       $('#description2').text(article2['title'])
       $('#img2Link').attr('href',article2['url'])
+      $('#newsImage2').attr('src',article2['image'])
+      $('#newsHead2').text(article2['sourceName'])
+      $('#newsContent2').text(article2['title'])
+      $('#newsLink2').attr('href',article2['url']) 
  
     })
   }

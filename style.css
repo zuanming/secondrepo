@@ -6,19 +6,22 @@ body {
   background-attachment: fixed;
   color: black;
 }
-#chart {
-  max-width: 650px;
+.chart {
+  width:100%;
+  /* max-width: 650px; */
   margin: 35px auto;
 }
-
+.critical{
+  color:goldenrod;
+}
 .recovered{
-  color:green;
+  color:#34A853;
 }
 .deaths{
-  color:darkred;
+  color:#EA4335;
 }
 .active{
-  color:darkgoldenrod;
+  color:#4285F4;
 }
 .confirmed{
   color:darkblue;
@@ -28,8 +31,50 @@ body {
 }
 .carouselimg{
   height:250px;
+  width:400px;
   object-fit:cover;
 }
 #mapid { 
-  height: 200px; 
+  height: 250px; 
+  margin-top: 30px;
+  margin-bottom:50px;
+}
+#globalPieChart{
+  margin-top:30px;
+  margin-bottom:20px;
+}
+.imageSmall{
+  width:120px;
+  height:auto;
+  margin:10px;
+  vertical-align: middle;
+  float: left;
+}
+.news{
+  border:solid;
+  border-radius: 20px;
+  border-width:1px;
+  margin-top:10px !important;
+  background-color:rgba(255, 255, 255, 255,.95) !important;
+  vertical-align: middle;
+  display:table;
+}
+.caption{
+  background-color:rgba(0, 0, 0, 0.5);
+}
+h1{
+  margin:20px;
+}
+h5{
+  margin-top:10px;
+}
+a {
+  color: black;
+}
+a:hover{
+  text-decoration:underline;
+  margin-top:5px;
+}
+.caption{
+  font-size:90%;
 }

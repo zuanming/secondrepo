@@ -148,7 +148,7 @@ $(document).ready(function(){
 
 
          //Statistics Display
-        
+        $('#countryNameDisplay').text(countryData['country']);
         $('#countryConfirmed').text(countryData['confirmed'].toLocaleString());
         $('#countryActive').text(countryData['active'].toLocaleString());
         $('#countryCritical').text(countryData['critical'].toLocaleString());

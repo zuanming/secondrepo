@@ -1,69 +1,71 @@
 body {
-  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)),url("virus.jpg");
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.8)),url("virus.jpg");
   background-color: #000000;
   background-position: center; /* Center the image */
   background-repeat: no-repeat; /* Do not repeat the image */
   background-attachment: fixed;
   color: black;
 }
+.tableHead{
+  text-align:left;
+}
+.tableData{
+  text-align:right;
+}
 .critical{
   color:darkgoldenrod;
 }
 .recovered{
   color:#34A853;
+  font-weight: bold;
+  font-size:110%;
 }
 .deaths{
   color:#EA4335;
+  font-weight: bold;
+  font-size:110%;
 }
 .active{
   color:#4285F4;
 }
 .confirmed{
   color:darkblue;
+  font-weight:bold;
+  font-size:110%;
 }
 .chart{
   width:100%;
 }
 .carouselimg{
-  height:250px;
-  width:400px;
+  height:230px;
+  width:350px;
   object-fit:cover;
 }
 #mapid { 
   height: 250px; 
-  margin-top: 30px;
   margin-bottom:50px;
 }
 #globalPieChart{
   margin-top:30px;
   margin-bottom:20px;
 }
-.imageSmall{
-  width:120px;
-  height:auto;
-  margin:10px;
-  vertical-align: middle !important;
-  float: left;
-}
-.news{
-  width:100%;
-  border:solid;
-  border-radius: 20px;
-  border-width:1px;
-  margin-top:10px !important;
-  margin-right:0px !important;
-  margin-left:0px !important;
-  background-color:rgba(255, 255, 255, 255,0.9) !important;
-  display:table;
-}
+
 .caption{
   background-color:rgba(0, 0, 0, 0.5);
+  font-size:90%;
 }
 h1{
   margin:20px;
 }
-h5{
-  margin-top:10px;
+h4{
+  text-align:center;
+  padding:15px;
+  border-radius: 50px 5px 50px 5px;
+  background-color:rgba(0, 0, 0, 0.4);
+  margin-bottom:20px;
+}
+h6{
+  font-weight: bold;
 }
 a {
   color: black;
@@ -72,11 +74,10 @@ a:hover{
   text-decoration:underline;
   margin-top:5px;
 }
-.caption{
-  font-size:90%;
-}
 .chartWrapper{
   position: relative;
+  padding-top:0;
+  padding-bottom:0;
   padding-right: 100%;
   width: 0;
   overflow:hidden;
@@ -84,14 +85,47 @@ a:hover{
 .chart {
   top: 0;
   left: 0;
-  height:100%;
-  width:250px;
+  height:90%;
   margin: 15px;
 }
 .chartv {
-
+  width:100%;
+  padding-left:0;
+  padding-right:0;
   margin-bottom: 40px;
 }
 .row{
   justify-content:center;
+}
+.newsSnippet{
+  width:100%;
+  border:solid;
+  border-radius: 0px 40px 40px 0px;
+  border-width:1px;
+  margin-top:20px !important;
+  margin-right:0px !important;
+  margin-left:0px !important;
+  background-color:rgba(255, 255, 255,0.7) !important;
+  align-content:center;
+}
+.newsSnippetImage{
+  /* width:30%; */
+  display:inline-block;
+  float:left;
+  vertical-align:middle;
+  padding:0;
+}
+.imageSmall{
+  min-height:150px;
+  width:100%;
+  vertical-align: middle !important;
+  object-fit:cover;
+}
+.newsSnippetContent{
+  /* width:70%; */
+  float:right;
+  padding-left:25px;
+}
+.smallNewsHeader{
+  padding-top:25px;
 }

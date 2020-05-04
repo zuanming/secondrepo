@@ -51,28 +51,54 @@
 
     </div>
 
-    <!--Latest Info Container-->
+    <!--Global Summary Info Container-->
     <div class='container'>
-      <div class='row'>
-
+      <h4>Global Summary</h4>
+      <div class='row' style="justify-content:space-around;">
         <!--Global Summary Statistics-->
-        <div id='globalSummary' class='col-xl-4 col-lg-5 col-md-8 col-sm-8 col-xs-10 '>
-          Global Summary
+        <div id='globalSummary' class='col-xl-3 col-lg-4 col-md-5 col-sm-7 col-7'>
           <!-- Other Information by JS Fetch -->
+          <table style="width:100%">
+            <tr style="text-align:right;">
+              <td class="confirmed tableHead">Total Cases: </th>
+              <td class="confirmed tableData" id="globalConfirmed"></th> 
+            </tr>
+            <tr>
+              <td class="active tableHead">Active Cases: </th>
+              <td class="active tableData" id="globalActive"></th> 
+            </tr>
+            <tr>
+              <td class="critical tableHead">Critical Cases: </th>
+              <td class="critical tableData" id="globalCritical"></th> 
+            </tr>
+            <tr>
+              <td class="recovered tableHead">Recovered Cases: </th>
+              <td class="recovered tableData" id="globalRecovered"></th> 
+            </tr>
+            <tr>
+              <td class="deaths tableHead">Deaths: </th>
+              <td class="deaths tableData" id="globalDeaths"></th> 
+            </tr>
+          </table>
         </div>
 
         <!-- Global Summary Pie Chart -->
-        <div class=' col-xl-4 col-lg-7 col-md-8 col-sm-10 col-xs-10'>
+        <div class=' col-xl-4 col-lg-5 col-md-5 col-sm-8 col-8 my-auto'>
           <div class="chartWrapper">
             <div id='globalPieChart' class="chart">
-              <!-- Pie Chart by JS Fetch -->
+            <!-- Pie Chart by JS Fetch -->
+
             </div>
           </div>
         </div>
 
 
-        <!-- Global News Carousel (Large) -->
-        <div class='col-xl-4 d-none d-xl-block'>
+        <!-- Global News Carousel (XS and XL screens) -->
+        <div class='col-12 col-xl-4 d-block d-sm-none d-md-none d-lg-none d-xl-block'>
+          <h4 class="d-block d-sm-none d-md-none d-lg-none d-xl-none">Latest News</h4>
+          <div style="text-align:center;" class="d-none d-sm-none d-md-none d-lg-none d-xl-block">
+            <h5><em>-Latest News-</em></h5>
+          </div>
           <div id="newsCarousel" class="carousel slide" data-ride="carousel">
             <ol class="carousel-indicators">
               <li data-target="#newsCarousel" data-slide-to="0" class="active"></li>
@@ -82,26 +108,26 @@
             <div class="carousel-inner">
               <div class="carousel-item active" style=:"width:100%">
                 <a id="img0Link" href="" target="_blank"style=:"height:100%">
-                <img id="img0" class="d-block w-100 carouselimg" src="" alt="First slide">
-                <div id="caption0" class="carousel-caption caption d-none d-md-block">
-                  <h6 id="caption0" class="caption">Caption 0</h6>
-                  <p id="description0" class="caption"></p>
+                <img id="img0" class="d-block w-100 carouselimg" src="" alt="News Image 1">
+                <div class="carousel-caption caption">
+                  <h6 id="caption0" class="d-block">Caption 0</h6>
+                  <p id="description0" class="d-block"></p>
                 </div>
               </div>
               <div class="carousel-item" style=:"width:100%">
                 <a id="img1Link" href="" target="_blank" style=:"height:100%">
-                <img id="img1" class="d-block w-100 carouselimg" src="" alt="Second slide">
-                <div class="carousel-caption caption d-none d-md-block">
-                  <h6 id="caption1" class="caption">Caption 1</h6>
-                  <p id="description1" class="caption"></p>
+                <img id="img1" class="d-block w-100 carouselimg" src="" alt="News Image 2">
+                <div class="carousel-caption caption">
+                  <h6 id="caption1" class="d-block">Caption 1</h6>
+                  <p id="description1" class="d-block"></p>
                 </div>
               </div>
               <div class="carousel-item" style=:"width:100%">
                 <a id="img2Link" href="" target="_blank" style=:"height:100%">
-                <img id="img2" class="d-block w-100 carouselimg" src="" alt="Third slide">
-                <div class="carousel-caption caption d-none d-md-block">
-                  <h6 id="caption2" class="caption">Caption 2</h6>
-                  <p id="description2" class="caption"></p>
+                <img id="img2" class="d-block w-100 carouselimg" src="" alt="News Image 3">
+                <div class="carousel-caption caption">
+                  <h6 id="caption2" class="d-block">Caption 2</h6>
+                  <p id="description2" class="d-block"></p>
                 </div>
               </div>
             </div>
@@ -116,56 +142,63 @@
           </div>
         </div>
       </div>
-      
-      <div class="container">
-        <!-- Global News Container (Small) -->
-        <div class='col-lg-12 col-md-12 col-12 d-block d-xl-none'>
-          <div id="news0" class="news row my-auto">
-            <div>
-              <img id="newsImage0" class="imageSmall" src="" alt="News Image 0">
-              <a id="newsLink0" href=""> 
-                <h5 id="newsHead0"></h5>
-              </a>
-              <p id="newsContent0"><p>   
-            </div>
+    </div>
+
+
+    <!-- Global News Container (Small to Large Screens) -->
+    <div class="container  d-none d-sm-block d-lg-block d-xl-none">
+        <h4>Latest News</h4>
+        <div id="news0" class="row newsSnippet">
+          <div class="newsSnippetImage col-lg-3 col-md-3 col-sm-3 col-xs-3 col-4">
+            <img id="newsImage0" class="imageSmall" src="" alt="News Image 1">
           </div>
-          <div id="news1" class="news row my-auto">
-            <div >
-              <img id="newsImage1" class="imageSmall" src="" alt="News Image 1">
-              <a id="newsLink1" href="")> 
-                <h5 id="newsHead1"></h5>
-              </a>
-              <p id="newsContent1"><p>
-              </p>
-            </div>
-          </div>
-          <div id="news2" class="news row my-auto">
-            <div>
-              <img id="newsImage2" class="imageSmall" src="" alt="News Image 2">
-              <a id="newsLink2" href=""> 
-                <h5 id="newsHead2"></h5>
-              </a>
-              <p id="newsContent2"><p>
-            </div>
+          <div class="newsSnippetContent col-lg-9 col-md-9 col-sm-9 col-xs-9 col-8" >
+            <a id="newsLink0" href=""> 
+              <h5 id="newsHead0" class="smallNewsHeader"></h5>
+              <p id="newsContent0"><p>
+            </a>   
           </div>
         </div>
-
-      </div>
+        <div id="news1" class="newsSnippet row">
+          <div class="newsSnippetImage col-lg-3 col-md-3 col-sm-3 col-xs-3 col-4">
+            <img id="newsImage1" class="imageSmall" src="" alt="News Image 2">
+          </div>
+          <div class="newsSnippetContent col-lg-9 col-md-9 col-sm-9 col-xs-9 col-8">
+            <a id="newsLink1" href="")> 
+              <h5 id="newsHead1" class="smallNewsHeader" ></h5>
+              <p id="newsContent1"><p>
+            </a>
+            </p>
+          </div>
+        </div>
+        <div id="news2" class="newsSnippet row">
+          <div class="newsSnippetImage col-lg-3 col-md-3 col-sm-3 col-xs-3 col-4">
+            <img id="newsImage2" class="imageSmall" src="" alt="News Image 3">
+          </div>
+          <div class="newsSnippetContent col-lg-9 col-md-9 col-sm-9 col-xs-9 col-8">
+            <a id="newsLink2" href=""> 
+              <h5 id="newsHead2" class="smallNewsHeader"></h5>
+              <p id="newsContent2"><p>
+            </a>
+          </div>
+        </div>
     </div>
       
       <!--Map-->
-    <div class='container'>
+    <div class='container' style="margin-top:50px;">
+    <h4>World Map</h4>
       <div id="mapid">
       </div>
     </div>
     
+    <div class="container" style="min-height:250px;">
+      <h4>Country Statistics</h4>
 
-    <!--Search-->
-    <div class='container' style="padding-top:20px;padding-bottom:50px; ">
-      <div class='row'>
+       <!--Country Data Search-->
+      <div class='row' style="padding-bottom:20px">
         <div class="col-xl-10 col-lg-10 col-md-10 col-sm-10 col-xs-10">
-        <!--Country Select-->
-          <select name="countrySelect" size="1" id="countrySelect" style="float:left;">
+          <!--Dropdown Menu Country Select-->
+          <select name="countrySelect" size="1" id="countrySelect" style="float:left; margin-right:35px;">
             <option value="" selected disabled>Select Country</option>
             <option id="Afghanistan" value="Afghanistan">Afghanistan</option>
             <option id="Algeria" value="Algeria">Algeria</option>
@@ -351,36 +384,72 @@
             <option id="Zambia" value="Zambia">Zambia</option>
             <option id="Zimbabwe" value="Zimbabwe">Zimbabwe</option>
           </select>
-          <div style="padding-left:20px">
+
+          <!-- Search Button -->
+          <div>
             <button id='searchBtn'>Search!</button>
           </div>
         </div>
       </div>
-    </div>
+      <div id='countryStats' style="min-height:300px;display:none;">
+        <div style="text-align:center;">  
+          <img id="countryFlag" style="height:120px;"  style="padding:15px;" src="" alt='Country Flag'>
+        </div>
 
-    <!--Data Display -->
-    <div class='container' style="min-height:500px;">
-      <div class='row '>
-          <div id='statistics' class="col-xl-5 col-lg-5 col-md-8 col-sm-8 col-xs-10">
+        <!-- Country Stats & Pie Chart -->
+        <div class='row' style="justify-content:space-around">
+          <div class="col-xl-3 col-lg-4 col-md-5 col-sm-7 col-7 my-auto">
+            <table style="width:100%">
+              <tr style="text-align:right;">
+                <td class="confirmed tableHead">Total Cases: </th>
+                <td class="confirmed tableData" id="countryConfirmed"></th> 
+              </tr>
+              <tr>
+                <td class="active tableHead">Active Cases: </th>
+                <td class="active tableData" id="countryActive"></th> 
+              </tr>
+              <tr>
+                <td class="critical tableHead">Critical Cases: </th>
+                <td class="critical tableData" id="countryCritical"></th> 
+              </tr>
+              <tr>
+                <td class="recovered tableHead">Recovered Cases: </th>
+                <td class="recovered tableData" id="countryRecovered"></th> 
+              </tr>
+              <tr>
+                <td class="deaths tableHead">Deaths: </th>
+                <td class="deaths tableData" id="countryDeaths"></th> 
+              </tr>
+            </table>
           </div>
-          <div class="col-xl-5 col-lg-7 col-md-8 col-sm-10 col-xs-10">
+          <div class="col-xl-4 col-lg-5 col-md-6 col-sm-8 col-8 my-auto">
             <div class="chartWrapper">
               <div id="countryPieChart" class="chart">
               </div>
             </div>
           </div>
-      </div>
-      <div class='row'>
-        <div class="">
-          <div id="confirmedChart" class="chartv col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
-          </div> 
-        </div>
-        <div class="">
-          <div id="newChart" class="chartv col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
-          </div>
         </div>
 
+        <!-- Line Graphs -->
+        <div class='row' style="justify-content:space-around">
+          <div>
+            <div id="confirmedChart" class="chartv col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
+            </div> 
+          </div>
+          <div>
+            <div id="newChart" class="chartv col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+     
+
+
+
+    <!--Data Display -->
+    
+  </div>
 
     <script src="script.js"></script>
   </body>

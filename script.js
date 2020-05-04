@@ -19,10 +19,15 @@ $(document).ready(function(){
 
   $('#searchBtn').on('click',function(){
     let selectedCountry=$('#countrySelect').val();
-    $('#newChart').empty();
-    $('#confirmedChart').empty();
-    $('#countryStats').css("display","block");
-    getCountryData(selectedCountry);
+    if(selectedCountry==null){
+      alert('Please select a country!')
+    }else{
+      $('#newChart').empty();
+      $('#confirmedChart').empty();
+      $('#countryStats').css("display","block");
+      getCountryData(selectedCountry);
+    }
+    
   })
 
     
@@ -197,7 +202,7 @@ $(document).ready(function(){
 
 
        //Confirmed Cases trend Line Graph Display
-      var confirmedDataArray =[['Day', 'Confirmed','Recovered','Deaths']]
+      var confirmedDataArray =[['Day', 'Total','Recovered','Deaths']]
       for (let i=0;i<90;i++){
         let date=Object.keys(countryData['confirmedArray'])[i]
         let cases=countryData['confirmedArray'][Object.keys(countryData['confirmedArray'])[i]]
@@ -218,7 +223,10 @@ $(document).ready(function(){
           0: { color: 'darkblue' },
           1: { color: '#34A853' },
           2: { color: '#EA4335' },
-        }
+        },
+        titleTextStyle: {
+          fontSize: 14
+        },
       };
 
       var chartConfirmed = new google.visualization.LineChart(document.getElementById('confirmedChart'));
@@ -229,7 +237,7 @@ $(document).ready(function(){
   
 
       //New Cases trend line Graph Display
-      var newDataArray = [['Day', 'Confirmed','Recovered','Deaths']]
+      var newDataArray = [['Day', 'Total','Recovered','Deaths']]
       for (let i=1;i<90;i++){
         let date=Object.keys(countryData['confirmedArray'])[i]
         let cases=countryData['confirmedArray'][Object.keys(countryData['confirmedArray'])[i]]-countryData['confirmedArray'][Object.keys(countryData['confirmedArray'])[i-1]]
@@ -249,7 +257,10 @@ $(document).ready(function(){
           0: { color: 'darkblue' },
           1: { color: '#34A853' },
           2: { color: '#EA4335' },
-        }
+        },
+        titleTextStyle: {
+          fontSize: 14
+        },
       }
       var chartNew = new google.visualization.LineChart(document.getElementById('newChart'));
       google.charts.setOnLoadCallback(chartNew.draw(dataNew, optionsNew));

@@ -32,6 +32,7 @@ body {
   color:darkblue;
   font-weight:bold;
   font-size:110%;
+  text-decoration:underline;
 }
 .chart{
   width:100%;

@@ -272,59 +272,34 @@ $(document).ready(function(){
 
   //News Carousel
   function getNews(){
-    fetch('https://newsapi.org/v2/top-headlines?q=covid-19&category=health&language=en&sortBy=popularity&apiKey=5a45e2dfd22f412fbdbc3139ce8d3b37')
+    fetch('https://newsapi.org/v2/top-headlines?q=covid-19&language=en&sortBy=popularity&apiKey=5a45e2dfd22f412fbdbc3139ce8d3b37')
     .then((response) => {
       return response.json();
     })
     .then((data) => {
-
-      //News Carousel 0
-      article0={}
-      article0['sourceName']=data.articles[0].source.name;
-      article0['author']=data.articles[0].author;
-      article0['title']=data.articles[0].title;
-      article0['url']=data.articles[0].url; 
-      article0['image']=data.articles[0].urlToImage;
-      $('#img0').attr('src',article0['image']);
-      $('#caption0').text(article0['sourceName']);
-      $('#description0').text(article0['title']);
-      $('#img0Link').attr('href',article0['url']);
-      $('#newsImage0').attr('src',article0['image']);
-      $('#newsHead0').text(article0['sourceName']);
-      $('#newsContent0').text(article0['title']);
-      $('#newsLink0').attr('href',article0['url']);
       
-      //News Carousel 1
-      article1={}
-      article1['sourceName']=data.articles[1].source.name;
-      article1['author']=data.articles[1].author;
-      article1['title']=data.articles[1].title;
-      article1['url']=data.articles[1].url;
-      article1['image']=data.articles[1].urlToImage;
-      $('#img1').attr('src',article1['image']);
-      $('#caption1').text(article1['sourceName']);
-      $('#description1').text(article1['title']);
-      $('#img1Link').attr('href',article1['url']);
-      $('#newsImage1').attr('src',article1['image']);
-      $('#newsHead1').text(article1['sourceName']);
-      $('#newsContent1').text(article1['title']);
-      $('#newsLink1').attr('href',article1['url']) ;
+      let newsNo=0;
+      let artcNo=0
+      while (newsNo<3){
+        if (data.articles[artcNo+1].title==data.articles[artcNo].title){
+          artNo+=1;
+        }else{
+          $(`#img${artcNo}`).attr('src',data.articles[artcNo].urlToImage);
+          $(`#caption${artcNo}`).text(data.articles[artcNo].source.name);
+          $(`#description${artcNo}`).text(data.articles[artcNo].title);
+          $(`#img${artcNo}Link`).attr('href',data.articles[artcNo].url);
+          $(`#newsImage${artcNo}`).attr('src',data.articles[artcNo].urlToImage);
+          $(`#newsHead${artcNo}`).text(data.articles[artcNo].source.name);
+          $(`#newsContent${artcNo}`).text(data.articles[artcNo].title);
+          $(`#newsLink${artcNo}`).attr('href',data.articles[artcNo].url);
+          artcNo+=1
+          newsNo+=1;
+        }
+        
 
-      //News Carousel 2
-      article2={}
-      article2['sourceName']=data.articles[2].source.name;
-      article2['author']=data.articles[2].author;
-      article2['title']=data.articles[2].title;
-      article2['url']=data.articles[2].url;
-      article2['image']=data.articles[2].urlToImage;
-      $('#img2').attr('src',article2['image']);
-      $('#caption2').text(article2['sourceName']);
-      $('#description2').text(article2['title']);
-      $('#img2Link').attr('href',article2['url']);
-      $('#newsImage2').attr('src',article2['image']);
-      $('#newsHead2').text(article2['sourceName']);
-      $('#newsContent2').text(article2['title']);
-      $('#newsLink2').attr('href',article2['url']); 
+        
+
+      }
     })
   }
 });

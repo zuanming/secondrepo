@@ -196,9 +196,10 @@
 
        <!--Country Data Search-->
       <div class='row' style="padding-bottom:20px">
-        <div class="col-xl-10 col-lg-10 col-md-10 col-sm-10 col-xs-10">
+        <div style="justify-content:right;">
           <!--Dropdown Menu Country Select-->
-          <select name="countrySelect" size="1" id="countrySelect" style="float:left; margin-right:35px;">
+
+          <select name="countrySelect" size="1" id="countrySelect" style=" margin-right:35px;">
             <option value="" selected disabled>Select Country</option>
             <option id="Afghanistan" value="Afghanistan">Afghanistan</option>
             <option id="Algeria" value="Algeria">Algeria</option>
@@ -385,66 +386,73 @@
             <option id="Zimbabwe" value="Zimbabwe">Zimbabwe</option>
           </select>
 
+        </div>
+
           <!-- Search Button -->
+         <div style="justify-content:left">
           <div>
             <button id='searchBtn'>Search!</button>
           </div>
         </div>
       </div>
-      <div id='countryStats' style="min-height:300px;display:none;">
-        <div style="text-align:center;">  
-          <img id="countryFlag" style="height:120px;"  style="padding:15px;;" src="" alt='Country Flag'>
-          <h5 id="countryNameDisplay" style="margin-top:15px;font-size:150%"></h5>
-        </div>
 
-        <!-- Country Stats & Pie Chart -->
-        <div class='row' style="justify-content:space-around">
-          <div class="col-xl-3 col-lg-4 col-md-5 col-sm-7 col-10 my-auto">
-            <table style="width:100%">
-              <tr style="text-align:right;">
-                <td class="confirmed tableHead">Total Cases: </th>
-                <td class="confirmed tableData" id="countryConfirmed"></th> 
-              </tr>
-              <tr>
-                <td class="active tableHead">Active Cases: </th>
-                <td class="active tableData" id="countryActive"></th> 
-              </tr>
-              <tr>
-                <td class="critical tableHead">Critical Cases: </th>
-                <td class="critical tableData" id="countryCritical"></th> 
-              </tr>
-              <tr>
-                <td class="recovered tableHead">Recovered Cases: </th>
-                <td class="recovered tableData" id="countryRecovered"></th> 
-              </tr>
-              <tr>
-                <td class="deaths tableHead">Deaths: </th>
-                <td class="deaths tableData" id="countryDeaths"></th> 
-              </tr>
-            </table>
+
+      <div class="row" style="justify-content:center;">
+        <!-- Country Statistics Section -->
+        <div id='countryStats' style="min-height:300px;display:none;">
+          <div style="text-align:center;">  
+            <img id="countryFlag" style="height:120px;"  style="padding:15px;;" src="" alt='Country Flag'>
+            <h5 id="countryNameDisplay" style="margin-top:15px;font-size:150%"></h5>
           </div>
-          <div class="col-xl-4 col-lg-5 col-md-6 col-sm-8 col-10 my-auto">
-            <div class="chartWrapper">
-              <div id="countryPieChart" class="chart">
+
+          <!-- Country Stats & Pie Chart -->
+          <div class='row' style="justify-content:space-around">
+            <div class="col-xl-3 col-lg-4 col-md-5 col-sm-7 col-10 my-auto">
+              <table style="width:100%">
+                <tr style="text-align:right;">
+                  <td class="confirmed tableHead">Total Cases: </th>
+                  <td class="confirmed tableData" id="countryConfirmed"></th> 
+                </tr>
+                <tr>
+                  <td class="active tableHead">Active Cases: </th>
+                  <td class="active tableData" id="countryActive"></th> 
+                </tr>
+                <tr>
+                  <td class="critical tableHead">Critical Cases: </th>
+                  <td class="critical tableData" id="countryCritical"></th> 
+                </tr>
+                <tr>
+                  <td class="recovered tableHead">Recovered Cases: </th>
+                  <td class="recovered tableData" id="countryRecovered"></th> 
+                </tr>
+                <tr>
+                  <td class="deaths tableHead">Deaths: </th>
+                  <td class="deaths tableData" id="countryDeaths"></th> 
+                </tr>
+              </table>
+            </div>
+            <div class="col-xl-4 col-lg-5 col-md-6 col-sm-6 col-10 my-auto">
+              <div class="chartWrapper">
+                <div id="countryPieChart" class="chart">
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <!-- Line Graphs -->
-        <div class='row' style="justify-content:space-around">
-          <div>
-            <div id="confirmedChart" class="chartv col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
-            </div> 
-          </div>
-          <div>
-            <div id="newChart" class="chartv col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
+          <!-- Line Graphs -->
+          <div class='row' style="justify-content:space-around">
+            <div>
+              <div id="confirmedChart" class="chartv col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
+              </div> 
+            </div>
+            <div>
+              <div id="newChart" class="chartv col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-     
 
 
 

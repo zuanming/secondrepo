@@ -272,33 +272,31 @@ $(document).ready(function(){
 
   //News Carousel
   function getNews(){
-    fetch('https://newsapi.org/v2/top-headlines?q=covid-19&language=en&sortBy=popularity&apiKey=5a45e2dfd22f412fbdbc3139ce8d3b37')
+    fetch('https://newsapi.org/v2/top-headlines?q=coronavirus&language=en&sortBy=popularity&apiKey=5a45e2dfd22f412fbdbc3139ce8d3b37')
     .then((response) => {
       return response.json();
     })
     .then((data) => {
+      console.log(data)
+      let n=0 //Index of article number from API
+      let c=0 //Counter to check total of 3 articles
       
-      let newsNo=0;
-      let artcNo=0
-      while (newsNo<3){
-        if (data.articles[artcNo+1].title==data.articles[artcNo].title){
-          artNo+=1;
+      while (c<3){
+        //If Article has no title or Source Name, skip to next article
+        if((data.articles[n].source.name==null) || (data.articles[n].title)==null){
+          n=n+1;
         }else{
-          $(`#img${artcNo}`).attr('src',data.articles[artcNo].urlToImage);
-          $(`#caption${artcNo}`).text(data.articles[artcNo].source.name);
-          $(`#description${artcNo}`).text(data.articles[artcNo].title);
-          $(`#img${artcNo}Link`).attr('href',data.articles[artcNo].url);
-          $(`#newsImage${artcNo}`).attr('src',data.articles[artcNo].urlToImage);
-          $(`#newsHead${artcNo}`).text(data.articles[artcNo].source.name);
-          $(`#newsContent${artcNo}`).text(data.articles[artcNo].title);
-          $(`#newsLink${artcNo}`).attr('href',data.articles[artcNo].url);
-          artcNo+=1
-          newsNo+=1;
+          $(`#img${n}`).attr('src',data.articles[n].urlToImage);
+          $(`#caption${n}`).text(data.articles[n].source.name);
+          $(`#description${n}`).text(data.articles[n].title);
+          $(`#img${n}Link`).attr('href',data.articles[n].url);
+          $(`#newsImage${n}`).attr('src',data.articles[n].urlToImage);
+          $(`#newsHead${n}`).text(data.articles[n].source.name);
+          $(`#newsContent${n}`).text(data.articles[n].title);
+          $(`#newsLink${n}`).attr('href',data.articles[n].url);
+          n=n+1;
+          c=c+1;
         }
-        
-
-        
-
       }
     })
   }

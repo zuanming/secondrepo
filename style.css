@@ -118,6 +118,7 @@ a:hover{
 }
 .imageSmall{
   min-height:150px;
+  height:100%;
   width:100%;
   vertical-align: middle !important;
   object-fit:cover;

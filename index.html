@@ -83,7 +83,7 @@
         </div>
 
         <!-- Global Summary Pie Chart -->
-        <div class=' col-xl-4 col-lg-5 col-md-5 col-sm-8 col-8 my-auto'>
+        <div class=' col-xl-4 col-lg-5 col-md-5 col-sm-8 col-10 my-auto'>
           <div class="chartWrapper">
             <div id='globalPieChart' class="chart">
             <!-- Pie Chart by JS Fetch -->
@@ -153,7 +153,7 @@
             <img id="newsImage0" class="imageSmall" src="" alt="News Image 1">
           </div>
           <div class="newsSnippetContent col-lg-9 col-md-9 col-sm-9 col-xs-9 col-8" >
-            <a id="newsLink0" href=""> 
+            <a id="newsLink0" href="" target="_blank"> 
               <h5 id="newsHead0" class="smallNewsHeader"></h5>
               <p id="newsContent0"></p>
             </a>
@@ -164,7 +164,7 @@
             <img id="newsImage1" class="imageSmall" src="" alt="News Image 2">
           </div>
           <div class="newsSnippetContent col-lg-9 col-md-9 col-sm-9 col-xs-9 col-8">
-            <a id="newsLink1" href=""> 
+            <a id="newsLink1" href="" target="_blank"> 
               <h5 id="newsHead1" class="smallNewsHeader" ></h5>
               <p id="newsContent1"></p>
             </a>
@@ -175,7 +175,7 @@
             <img id="newsImage2" class="imageSmall" src="" alt="News Image 3">
           </div>
           <div class="newsSnippetContent col-lg-9 col-md-9 col-sm-9 col-xs-9 col-8">
-            <a id="newsLink2" href=""> 
+            <a id="newsLink2" href="" target="_blank"> 
               <h5 id="newsHead2" class="smallNewsHeader"></h5>
               <p id="newsContent2"></p>
             </a>
@@ -194,10 +194,10 @@
       <h4>Country Statistics</h4>
 
        <!--Country Data Search-->
-      <div class='row' style="padding-bottom:20px">
-        <div class="col-xl-10 col-lg-10 col-md-10 col-sm-10 col-xs-10">
+      <div class='row' style="padding-bottom:20px;">
+        <div class="col-xl-10 col-lg-10 col-md-10 col-sm-10 col-xs-10" style="text-align:center;">
           <!--Dropdown Menu Country Select-->
-          <select name="countrySelect" size="1" id="countrySelect" style="float:left; margin-right:35px;">
+          <select name="countrySelect" size="1" id="countrySelect" style="margin-right:35px;height:30px;margin-bottom:5px;">
             <option value="" selected disabled>Select Country</option>
             <option value="Afghanistan">Afghanistan</option>
             <option value="Algeria">Algeria</option>
@@ -384,9 +384,9 @@
           </select>
 
           <!-- Search Button -->
-          <div>
-            <button id='searchBtn'>Search!</button>
-          </div>
+          <!-- <div> -->
+            <button id='searchBtn' style="height;30px;margin-bottom:30px;">Search!</button>
+          <!-- </div> -->
         </div>
       </div>
 
@@ -422,7 +422,7 @@
               </tr>
             </table>
           </div>
-          <div class="col-xl-4 col-lg-5 col-md-6 col-sm-8 col-8 my-auto">
+          <div class="col-xl-4 col-lg-5 col-md-6 col-sm-8 col-10 my-auto">
             <div class="chartWrapper">
               <div id="countryPieChart" class="chart">
               </div>

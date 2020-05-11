@@ -16,7 +16,6 @@ $(document).ready(function(){
   L.tileLayer.bing(bingKey).addTo(covidMap);
   getMap()
 
-
   $('#searchBtn').on('click',function(){
     let selectedCountry=$('#countrySelect').val();
     if(selectedCountry==null){
@@ -27,10 +26,7 @@ $(document).ready(function(){
       $('#countryStats').css("display","block");
       getCountryData(selectedCountry);
     }
-    
   })
-
-    
 
   function getMap(){
     fetch(`https://disease.sh/v2/countries`)
@@ -50,7 +46,16 @@ $(document).ready(function(){
           fillOpacity: 0.5,
           radius: countryCases,
         }).addTo(covidMap)
-        circle.bindPopup(`${countryName}: ${countryCases.toLocaleString()} Cases`).addTo(covidMap);
+
+        circle.bindPopup(`<u>${countryName}:</u><br>
+        <b>${data[i].cases.toLocaleString()
+        } Total Cases</b><br>
+        ${data[i].active.toLocaleString()
+        } Active Cases<br>
+        ${data[i].recovered.toLocaleString()
+        } Recovered<br>
+        ${data[i].deaths.toLocaleString()
+        } Deaths`).addTo(covidMap);
         
         circle.on('mouseover', function () {
             this.openPopup();
@@ -59,11 +64,7 @@ $(document).ready(function(){
             this.closePopup();
         });
       }
-      
     })
-
-        
-    
   }
 
 
@@ -141,7 +142,13 @@ $(document).ready(function(){
       var marker=L.marker([countryData['lat'], countryData['long']]).addTo(covidMap)
 
       //Add marker to selected country on map
-      marker.bindPopup(`${countryData['country']}: ${countryData['confirmed'].toLocaleString()} Cases`)
+      marker.bindPopup(`<u>${countryData['country']}:</u><br>
+      <b>${countryData['confirmed'].toLocaleString()} Total Cases</b><br>
+      ${countryData['active'].toLocaleString()} Active Cases<br>
+      ${countryData['critical'].toLocaleString()} Critical Cases<br>
+      ${countryData['recovered'].toLocaleString()} Recovered<br>
+      ${countryData['deaths'].toLocaleString()} Deaths
+      `)
 
       //Marker display no. of cases popup
       marker.on('mouseover', function () {
@@ -214,7 +221,7 @@ $(document).ready(function(){
       var dataConfirmed = google.visualization.arrayToDataTable(confirmedDataArray);
 
       var optionsConfirmed = {
-        title: 'Total Cases',
+        title: 'TOTAL Cases',
         legend: {position: 'bottom'},
         backgroundColor:{fill:'none'},
         chartArea:{width:'62%'},
@@ -225,7 +232,7 @@ $(document).ready(function(){
           2: { color: '#EA4335' },
         },
         titleTextStyle: {
-          fontSize: 14
+          fontSize: 16
         },
       };
 
@@ -248,7 +255,7 @@ $(document).ready(function(){
     
       var dataNew = google.visualization.arrayToDataTable(newDataArray);
       var optionsNew = {
-        title: 'New Cases',
+        title: 'NEW Cases',
         legend: { position: 'bottom' },
         backgroundColor:{fill:'none'},
         chartArea:{width:'62%'},
@@ -259,7 +266,7 @@ $(document).ready(function(){
           2: { color: '#EA4335' },
         },
         titleTextStyle: {
-          fontSize: 14
+          fontSize: 16,
         },
       }
       var chartNew = new google.visualization.LineChart(document.getElementById('newChart'));
@@ -277,15 +284,15 @@ $(document).ready(function(){
       return response.json();
     })
     .then((data) => {
-      console.log(data)
       let n=0 //Index of article number from API
       let c=0 //Counter to check total of 3 articles
       
       while (c<3){
-        //If Article has no title or Source Name, skip to next article
-        if((data.articles[n].source.name==null) || (data.articles[n].title)==null){
+        //If Article has no title or Source Name or has same title as next article, skip to next article
+        if((data.articles[n].source.name==null) || (data.articles[n].title)==null || ((data.articles[n].title)==data.articles[n+1].title)){
           n=n+1;
-        }else{
+        }
+        else{
           $(`#img${n}`).attr('src',data.articles[n].urlToImage);
           $(`#caption${n}`).text(data.articles[n].source.name);
           $(`#description${n}`).text(data.articles[n].title);

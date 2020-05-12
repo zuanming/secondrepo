@@ -1,5 +1,5 @@
 body {
-  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.8)),url("virus.jpg");
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.8)),url("images/virus.jpg");
   background-color: #000000;
   background-position: center; /* Center the image */
   background-repeat: no-repeat; /* Do not repeat the image */

@@ -1,3 +1,5 @@
+//This JavaScript uses several APIs to fetch the latest COVID-19 data and news. The data and news is then presented in tables and charts for ease-of-viewing. 
+
 //Initialise Google Charts  
 google.charts.load('current', {packages: ['corechart']});
 function getLocation() {
@@ -7,7 +9,7 @@ function getLocation() {
 }
 
 var bingKey = `ArL7AHBx0Kg7wgSFzCpA58SuW4YBn0d5cDpDPhk98YI1xp9rn6XZcOwDPzkQrKcZ`;
-var covidMap = L.map('mapid').setView([30, 20], 0);
+var covidMap = L.map('mapid').setView([30, -10], 0);
 L.tileLayer.bing(bingKey).addTo(covidMap);
 var countryMarker=L.marker
 
@@ -29,6 +31,7 @@ $('#searchBtn').on('click',function(){
   }
 })
 
+//Populate map with Bing maps layer and fetch api data for country circles
 function getMap(){
   fetch(`https://disease.sh/v2/countries`)
   .then (response=>{
@@ -86,7 +89,7 @@ function getSummary(){
     result['deaths']=data.deaths;
     result['active']=data.active;
 
-    //Global Summary HTML input
+    //Get Global Summary
     $('#globalConfirmed').text(result['confirmed'].toLocaleString());
     $('#globalActive').text(result['active'].toLocaleString());
     $('#globalCritical').text(result['critical'].toLocaleString());
@@ -96,7 +99,7 @@ function getSummary(){
 
   .then(data=>{
 
-    //Pie Chart input
+    //Pie Chart of global summary data
     var dataPieGlobal = new google.visualization.DataTable();
     dataPieGlobal.addColumn('string', 'Cases');
     dataPieGlobal.addColumn('number', 'Number of Cases');
@@ -142,7 +145,7 @@ function getCountryData(country){
     countryData['active']=data.active
     countryData['critical']=data.critical
 
-    //Change Map View to selected country
+    //Change Map View to selected country and add marker
     if(countryMarker != undefined) {
       covidMap.removeLayer(countryMarker);
     };
@@ -165,16 +168,14 @@ function getCountryData(country){
     countryMarker.on('mouseout', function () {
       this.closePopup();
     });
-
-
-       //Statistics Display
-      $('#countryNameDisplay').text(countryData['country']);
-      $('#countryConfirmed').text(countryData['confirmed'].toLocaleString());
-      $('#countryActive').text(countryData['active'].toLocaleString());
-      $('#countryCritical').text(countryData['critical'].toLocaleString());
-      $('#countryRecovered').text(countryData['recovered'].toLocaleString());
-      $('#countryDeaths').text(countryData['deaths'].toLocaleString());
-      $('#countryFlag').attr('src',`${countryData['flag']}`)
+      //Statistics Display
+    $('#countryNameDisplay').text(countryData['country']);
+    $('#countryConfirmed').text(countryData['confirmed'].toLocaleString());
+    $('#countryActive').text(countryData['active'].toLocaleString());
+    $('#countryCritical').text(countryData['critical'].toLocaleString());
+    $('#countryRecovered').text(countryData['recovered'].toLocaleString());
+    $('#countryDeaths').text(countryData['deaths'].toLocaleString());
+    $('#countryFlag').attr('src',`${countryData['flag']}`)
 
     // Pie Chart Display of summary
     var dataPieCountry = new google.visualization.DataTable();
@@ -218,7 +219,6 @@ function getCountryData(country){
     countryData['deathsArray']=data.timeline.deaths
     countryData['recoveredArray']=data.timeline.recovered
 
-
      //Confirmed Cases trend Line Graph Display
     var confirmedDataArray =[['Day', 'Total','Recovered','Deaths']]
     for (let i=0;i<90;i++){
@@ -228,9 +228,7 @@ function getCountryData(country){
       let recovered=countryData['recoveredArray'][Object.keys(countryData['recoveredArray'])[i]]
       confirmedDataArray[i+1]=[new Date(date),parseInt(cases),parseInt(recovered),parseInt(deaths)]
     }
-
     var dataConfirmed = google.visualization.arrayToDataTable(confirmedDataArray);
-
     var optionsConfirmed = {
       title: 'TOTAL Cases',
       legend: {position: 'bottom'},
@@ -246,12 +244,8 @@ function getCountryData(country){
         fontSize: 16
       },
     };
-
     var chartConfirmed = new google.visualization.LineChart(document.getElementById('confirmedChart'));
     google.charts.setOnLoadCallback(chartConfirmed.draw(dataConfirmed, optionsConfirmed));
-
-    
-
 
 
     //New Cases trend line Graph Display
@@ -263,7 +257,6 @@ function getCountryData(country){
       let recovered=countryData['recoveredArray'][Object.keys(countryData['recoveredArray'])[i]]-countryData['recoveredArray'][Object.keys(countryData['recoveredArray'])[i-1]]
       newDataArray[i]=[new Date(date),parseInt(cases),parseInt(recovered),parseInt(deaths)]
     }
-  
     var dataNew = google.visualization.arrayToDataTable(newDataArray);
     var optionsNew = {
       title: 'NEW Cases',
@@ -282,7 +275,6 @@ function getCountryData(country){
     }
     var chartNew = new google.visualization.LineChart(document.getElementById('newChart'));
     google.charts.setOnLoadCallback(chartNew.draw(dataNew, optionsNew));
-
   })
   .catch(error=>{
     alert("API Error! Please refresh or wait for a few minutes before loading.")
@@ -291,7 +283,7 @@ function getCountryData(country){
 
 
 
-//News Carousel
+//Get News Carousel & News Snippet
 function getNews(){
   fetch('https://newsapi.org/v2/top-headlines?q=coronavirus&language=en&sortBy=popularity&apiKey=5a45e2dfd22f412fbdbc3139ce8d3b37')
   .then((response) => {
@@ -311,6 +303,7 @@ function getNews(){
         $(`#caption${c}`).text(data.articles[n].source.name);
         $(`#description${c}`).text(data.articles[n].title);
         $(`#img${c}Link`).attr('href',data.articles[n].url);
+        $(`#news${c}Link`).attr('href',data.articles[n].url);
         $(`#newsImage${c}`).attr('src',data.articles[n].urlToImage);
         $(`#newsHead${c}`).text(data.articles[n].source.name);
         $(`#newsContent${c}`).text(data.articles[n].title);

@@ -99,4 +99,6 @@ This website was built using tools and data from various sources, including but 
 
 * APIs were tested and verified with [Postman](https://www.postman.com) before being selected for use. 
 
+* Animated images (GIFs) were obtained from [Giphy](https://giphy.com).
+
 Last but not least, to [Trent Global](https://www.trentglobal.edu.sg/diplomainsoftwaredevelopment/?gclid=EAIaIQobChMI8M3ezf6t6QIV2BwrCh2R6A44EAAYASAAEgL6__D_BwE) and [Code Institute](https://codeinstitute.net) for the teachings and support to have made this project possible. 

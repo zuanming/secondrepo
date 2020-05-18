@@ -46,7 +46,7 @@
 
       <!-- Header Title -->
       <div class='row'>
-        <h1>COVID-19 Statistics</h1>
+        <h1 style="text-align:center;">COVID-19 Statistics</h1>
       </div>
 
     </div>
@@ -83,7 +83,7 @@
         </div>
 
         <!-- Global Summary Pie Chart -->
-        <div class=' col-xl-4 col-lg-5 col-md-5 col-sm-8 col-10 my-auto'>
+        <div class=' col-xl-4 col-lg-5 col-md-5 col-sm-8 col-8 my-auto'>
           <div class="chartWrapper">
             <div id='globalPieChart' class="chart">
             <!-- Pie Chart by JS Fetch -->
@@ -95,9 +95,9 @@
 
         <!-- Global News Carousel (XS and XL screens) -->
         <div class='col-12 col-xl-4 d-block d-sm-none d-md-none d-lg-none d-xl-block'>
-          <h4 class="d-block d-sm-none d-md-none d-lg-none d-xl-none">Latest News</h4>
+          <!-- <h4 class="d-block d-sm-none d-md-none d-lg-none d-xl-none">Latest COVID-19 News</h4> -->
           <div style="text-align:center;" class="d-none d-sm-none d-md-none d-lg-none d-xl-block">
-            <h5><em>-Latest News-</em></h5>
+            <h5><em>-Latest COVID-19 News-</em></h5>
           </div>
           <div id="newsCarousel" class="carousel slide" data-ride="carousel">
             <ol class="carousel-indicators">
@@ -110,24 +110,30 @@
                 <a id="img0Link" href="" target="_blank" style="height:100%">
                 <img id="img0" src="" class="d-block w-100 carouselimg" alt="News Image 1"></a>
                 <div class="carousel-caption caption">
-                  <h6 id="caption0" class="d-block"></h6>
+                  <a id="news0Link" class="newsText" href="" target="_blank">
+                  <h6 id="caption0" class="d-block captitle"></h6>
                   <p id="description0" class="d-block"></p>
+                  </a>
                 </div>
               </div>
               <div class="carousel-item" style="width:100%">
                 <a id="img1Link" href="" target="_blank" style="height:100%">
                 <img id="img1" src="" class="d-block w-100 carouselimg" alt="News Image 2"></a>
                 <div class="carousel-caption caption">
-                  <h6 id="caption1" class="d-block"></h6>
+                  <a id="news1Link" class="newsText" href="" target="_blank">
+                  <h6 id="caption1" class="d-block captitle"></h6>
                   <p id="description1" class="d-block"></p>
+                  </a>
                 </div>
               </div>
               <div class="carousel-item" style="width:100%">
                 <a id="img2Link" href="" target="_blank" style="height:100%">
                 <img id="img2" src="" class="d-block w-100 carouselimg" alt="News Image 3"></a>
                 <div class="carousel-caption caption">
-                  <h6 id="caption2" class="d-block"></h6>
+                <a id="news2Link" class="newsText" href="" target="_blank">
+                  <h6 id="caption2" class="d-block captitle"></h6>
                   <p id="description2" class="d-block"></p>
+                  </a>
                 </div>
               </div>
             </div>
@@ -147,7 +153,7 @@
 
     <!-- Global News Container (Small to Large Screens) -->
     <div class="container  d-none d-sm-block d-lg-block d-xl-none">
-        <h4>Latest News</h4>
+        <h4>Latest COVID-19 News</h4>
         <div id="news0" class="row newsSnippet">
           <div class="newsSnippetImage col-lg-3 col-md-3 col-sm-3 col-xs-3 col-4">
             <img id="newsImage0" class="imageSmall" src="" alt="News Image 1">
@@ -155,7 +161,7 @@
           <div class="newsSnippetContent col-lg-9 col-md-9 col-sm-9 col-xs-9 col-8" >
             <a id="newsLink0" href="" target="_blank"> 
               <h5 id="newsHead0" class="smallNewsHeader"></h5>
-              <p id="newsContent0"></p>
+              <p id="newsContent0" class="smallNewsContent"></p>
             </a>
           </div>
         </div>
@@ -166,7 +172,7 @@
           <div class="newsSnippetContent col-lg-9 col-md-9 col-sm-9 col-xs-9 col-8">
             <a id="newsLink1" href="" target="_blank"> 
               <h5 id="newsHead1" class="smallNewsHeader" ></h5>
-              <p id="newsContent1"></p>
+              <p id="newsContent1" class="smallNewsContent"></p>
             </a>
           </div>
         </div>
@@ -177,7 +183,7 @@
           <div class="newsSnippetContent col-lg-9 col-md-9 col-sm-9 col-xs-9 col-8">
             <a id="newsLink2" href="" target="_blank"> 
               <h5 id="newsHead2" class="smallNewsHeader"></h5>
-              <p id="newsContent2"></p>
+              <p id="newsContent2" class="smallNewsContent"></p>
             </a>
           </div>
         </div>
@@ -195,9 +201,9 @@
 
        <!--Country Data Search-->
       <div class='row' style="padding-bottom:20px;">
-        <div class="col-xl-10 col-lg-10 col-md-10 col-sm-10 col-xs-10" style="text-align:center;">
+        <div class="col-xl-10 col-lg-10 col-md-10 col-sm-10 col-xs-10" style="text-align:center;height:30px;">
           <!--Dropdown Menu Country Select-->
-          <select name="countrySelect" size="1" id="countrySelect" style="margin-right:35px;height:30px;margin-bottom:5px;">
+          <select name="countrySelect" size="1" id="countrySelect" style="margin-right:35px;height:100%;margin-bottom:5px;">
             <option value="" selected disabled>Select Country</option>
             <option value="Afghanistan">Afghanistan</option>
             <option value="Algeria">Algeria</option>
@@ -385,7 +391,7 @@
 
           <!-- Search Button -->
           <!-- <div> -->
-            <button id='searchBtn' style="height;30px;margin-bottom:30px;">Search!</button>
+            <button id='searchBtn' style="height;100%;margin-bottom:30px;">Search!</button>
           <!-- </div> -->
         </div>
       </div>
@@ -422,7 +428,7 @@
               </tr>
             </table>
           </div>
-          <div class="col-xl-4 col-lg-5 col-md-6 col-sm-8 col-10 my-auto">
+          <div class="col-xl-4 col-lg-5 col-md-6 col-sm-8 col-8 my-auto">
             <div class="chartWrapper">
               <div id="countryPieChart" class="chart">
               </div>
@@ -443,6 +449,61 @@
         </div>
       </div>
     </div>
+
+
+    <!--Additional Information-->
+    <div class="container">
+      <h4>Staying Safe</h4>
+      <h6 style="text-align:center;">Follow 3 these simple steps to minimise the risk of being infected!</h6>
+      <div class="row" style="margin-bottom:30px;justify-content:space-around;">
+        <div class="col-xl-3 col-lg-3 col-sm-3 col-4 my-auto" style="text-align:center;">
+          <img id="washHands" class="infoimg2" src="images/washHands.gif" alt="Wash Hands">
+          <p>Wash your hands</p>
+        </div>
+        <div class="col-xl-3 col-lg-3 col-sm-3 col-4 my-auto" style="text-align:center;">
+          <img id="wearMask" class="infoimg2" src="images/wearMask.gif" alt="Wear Mask">
+          <p>Wear a Mask</p>
+        </div>
+        <div class="col-xl-3 col-lg-3 col-sm-3 col-4 my-auto" style="text-align:center;">
+          <img id="socialDistancing" class="infoimg2" src="images/socialDistance.gif" alt="Social Distancing">
+          <p>Social Distancing</p>
+        </div>
+        <div id="stayHome" class="col-xl-3 col-lg-3 col-sm-3 col-4 my-auto" style="text-align:center;">
+          <img class="infoimg2" src="images/stayHome.gif" alt="Stay Home">
+          <p>Stay Home</p>
+        </div>
+      </div>
+
+      <h4>Other Sources Of Information</h4>
+      <div class="row infodiv" style="padding-bottom:80px;">
+        <div class="col-xl-4 col-lg-4 col-sm-5 col-8 my-auto">
+          <a href="https://www.who.int/emergencies/diseases/novel-coronavirus-2019" target="blank">
+            <img class="infoimg" src="https://www.who.int/ResourcePackages/WHO/assets/dist/images/logos/en/h-logo-white.svg" alt="World Health Organisation">
+          </a>
+        </div>
+        <div class="col-xl-4 col-lg-4 col-sm-5 col-8 my-auto">
+          <a href="https://coronavirus.jhu.edu/map.html" target="blank">
+            <img class="infoimg" src="https://coronavirus.jhu.edu/static/media/enterprise-medicine.logo.small.horizontal.white.581be190.png" alt="John Hopkins University">
+          </a>
+        </div>
+        <div class="col-xl-4 col-lg-4 col-sm-5 col-8 my-auto">
+          <a href="https://www.worldometers.info/coronavirus/" target="blank">
+            <img class="infoimg" src="https://www.worldometers.info/img/worldometers-logo.gif" alt="Worldometer">
+          </a>
+        </div>
+      </div>
+    </div>
+    <footer class="footer-copyright py-3" style="align-items:center;justify-content:center; font-size:x-small;background-color:rgba(255,255,255,0.8);">
+      <div class="container">
+        <div class="row">
+          <div class="" style="text-align:center;">
+            <p style="margin-bottom:0;">
+              Copyright © Toh Zuan Ming
+            </p>
+          </div>
+        </div>
+      </div>  
+    </footer>
 
     <script src="script.js"></script>
   </body>

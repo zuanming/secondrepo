@@ -15,6 +15,10 @@ Based on the objective, this website was built for any users who desire an overv
 
 There is also an interactive section where users can select a country of choice to view the country statistics and data trend. This option is targetted at users who want to know the situation in their locale or if they want to check out the statistics in other countries.
 
+Next, there is a section of animated images to alert uses of simple ways to minimise the risk of infection. Animated pictures were selected o capture the user's attention instead of still photos - users may quickly scroll past the still images. Short captions are also provided to textualise the animations.
+
+A final section with links to external websites for more information is placed at the bottom of the page. As this website only displays summarised data, this option is provided for users to navigate to other sites with more intricate or specific information and analyses they may wish to inquire.
+
 ## UI
 
 

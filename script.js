@@ -1,311 +1,328 @@
-
-$(document).ready(function(){
-
-  //Initialise Google Charts  
-  google.charts.load('current', {packages: ['corechart']});
-  function getLocation() {
+//Initialise Google Charts  
+google.charts.load('current', {packages: ['corechart']});
+function getLocation() {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(showPosition);
   } 
 }
 
-  getSummary()
-  getNews()
-  var bingKey = `ArL7AHBx0Kg7wgSFzCpA58SuW4YBn0d5cDpDPhk98YI1xp9rn6XZcOwDPzkQrKcZ`
-  var covidMap = L.map('mapid').setView([33, 65], 0);
-  L.tileLayer.bing(bingKey).addTo(covidMap);
-  getMap()
+var bingKey = `ArL7AHBx0Kg7wgSFzCpA58SuW4YBn0d5cDpDPhk98YI1xp9rn6XZcOwDPzkQrKcZ`;
+var covidMap = L.map('mapid').setView([30, 20], 0);
+L.tileLayer.bing(bingKey).addTo(covidMap);
+var countryMarker=L.marker
 
-  $('#searchBtn').on('click',function(){
-    let selectedCountry=$('#countrySelect').val();
-    if(selectedCountry==null){
-      alert('Please select a country!')
-    }else{
-      $('#newChart').empty();
-      $('#confirmedChart').empty();
-      $('#countryStats').css("display","block");
-      getCountryData(selectedCountry);
+$(document).ready(function(){
+
+getSummary()
+getNews()
+getMap()
+
+$('#searchBtn').on('click',function(){
+  let selectedCountry=$('#countrySelect').val();
+  if(selectedCountry==null){
+    alert('Please select a country!')
+  }else{
+    $('#newChart').empty();
+    $('#confirmedChart').empty();
+    $('#countryStats').css("display","block");
+    getCountryData(selectedCountry);
+  }
+})
+
+function getMap(){
+  fetch(`https://disease.sh/v2/countries`)
+  .then (response=>{
+    return response.json();
+  })
+  .then(data=>{
+    let dataLength = Object.keys(data).length;
+    for (let i =0;i<dataLength;i++){
+      let countryName=data[i].country
+      let countryLat=data[i].countryInfo.lat
+      let countryLong=data[i].countryInfo.long
+      let countryCases=data[i].cases
+      var circle=L.circle([countryLat, countryLong], {
+        color: 'red',
+        fillColor: '#f03',
+        fillOpacity: 0.5,
+        radius: countryCases,
+      }).addTo(covidMap)
+
+      circle.bindPopup(`<u>${countryName}:</u><br>
+      <b>${data[i].cases.toLocaleString()
+      } Total Cases</b><br>
+      ${data[i].active.toLocaleString()
+      } Active Cases<br>
+      ${data[i].recovered.toLocaleString()
+      } Recovered<br>
+      ${data[i].deaths.toLocaleString()
+      } Deaths`).addTo(covidMap);
+      
+      circle.on('mouseover', function () {
+          this.openPopup();
+      });
+      circle.on('mouseout', function () {
+          this.closePopup();
+      });
     }
   })
+  .catch(error=>{
+    alert("API Error! Please refresh or wait for a few minutes before loading.")
+  })
+}
 
-  function getMap(){
-    fetch(`https://disease.sh/v2/countries`)
-    .then (response=>{
-      return response.json();
+
+//Fetch global statistics from api
+function getSummary(){
+  fetch("https://disease.sh/v2/all")
+  .then((response) => {
+    return response.json();
+  })
+  .then((data) => {
+    result={};
+    result['confirmed']=data.cases;
+    result['recovered']=data.recovered;
+    result['critical']=data.critical;
+    result['deaths']=data.deaths;
+    result['active']=data.active;
+
+    //Global Summary HTML input
+    $('#globalConfirmed').text(result['confirmed'].toLocaleString());
+    $('#globalActive').text(result['active'].toLocaleString());
+    $('#globalCritical').text(result['critical'].toLocaleString());
+    $('#globalRecovered').text(result['recovered'].toLocaleString());
+    $('#globalDeaths').text(result['deaths'].toLocaleString());
     })
-    .then(data=>{
-      let dataLength = Object.keys(data).length;
-      for (let i =0;i<dataLength;i++){
-        let countryName=data[i].country
-        let countryLat=data[i].countryInfo.lat
-        let countryLong=data[i].countryInfo.long
-        let countryCases=data[i].cases
-        var circle=L.circle([countryLat, countryLong], {
-          color: 'red',
-          fillColor: '#f03',
-          fillOpacity: 0.5,
-          radius: countryCases,
-        }).addTo(covidMap)
 
-        circle.bindPopup(`<u>${countryName}:</u><br>
-        <b>${data[i].cases.toLocaleString()
-        } Total Cases</b><br>
-        ${data[i].active.toLocaleString()
-        } Active Cases<br>
-        ${data[i].recovered.toLocaleString()
-        } Recovered<br>
-        ${data[i].deaths.toLocaleString()
-        } Deaths`).addTo(covidMap);
-        
-        circle.on('mouseover', function () {
-            this.openPopup();
-        });
-        circle.on('mouseout', function () {
-            this.closePopup();
-        });
-      }
+  .then(data=>{
+
+    //Pie Chart input
+    var dataPieGlobal = new google.visualization.DataTable();
+    dataPieGlobal.addColumn('string', 'Cases');
+    dataPieGlobal.addColumn('number', 'Number of Cases');
+    dataPieGlobal.addRows([
+      ['Active', result['active']],
+      ['Critical', result['critical']],
+      ['Deaths', result['deaths']],
+      ['Recovered', result['recovered']],
+    ]);
+    var optionsPieGlobal = {
+      title:'Global Infected Cases',
+      is3D:true,
+      width:320,
+      backgroundColor:{fill:'none'},
+      chartArea:{left:5,top:0,width:'75%',height:'100%'},
+      legendTextStyle:{fontSize: 12},
+      slices: [{color: '#4285F4'}, {color: '#FBBC05'}, {color: '#EA4335'}, {color: '#34A853'}],
+    };
+    var chartPieGlobal = new google.visualization.PieChart(document.getElementById('globalPieChart'));
+    google.charts.setOnLoadCallback(chartPieGlobal.draw(dataPieGlobal, optionsPieGlobal));
     })
-  }
+  .catch(error=>{
+    alert("API Error! Please refresh or wait for a few minutes before loading.")
+  });
+}
 
 
-  //Fetch global statistics from api
-  function getSummary(){
-    fetch("https://disease.sh/v2/all")
-    .then((response) => {
-      return response.json();
-    })
-    .then((data) => {
-      result={};
-      result['confirmed']=data.cases;
-      result['recovered']=data.recovered;
-      result['critical']=data.critical;
-      result['deaths']=data.deaths;
-      result['active']=data.active;
+//Fetch api data by country
+function getCountryData(country){
+  fetch(`https://disease.sh/v2/countries/${country}`)
+  .then(response => {
+    return response.json()
+  })
+  .then(data=>{
+    countryData={}
+    countryData['country']=data.country
+    countryData['flag']=data.countryInfo.flag
+    countryData['lat']=data.countryInfo.lat
+    countryData['long']=data.countryInfo.long
+    countryData['confirmed']=data.cases
+    countryData['deaths']=data.deaths
+    countryData['recovered']=data.recovered
+    countryData['active']=data.active
+    countryData['critical']=data.critical
 
-      //Global Summary HTML input
-      $('#globalConfirmed').text(result['confirmed'].toLocaleString());
-      $('#globalActive').text(result['active'].toLocaleString());
-      $('#globalCritical').text(result['critical'].toLocaleString());
-      $('#globalRecovered').text(result['recovered'].toLocaleString());
-      $('#globalDeaths').text(result['deaths'].toLocaleString());
-      })
+    //Change Map View to selected country
+    if(countryMarker != undefined) {
+      covidMap.removeLayer(countryMarker);
+    };
+    covidMap.flyTo([countryData['lat'], countryData['long']], 6);
+    countryMarker=L.marker([countryData['lat'], countryData['long']]).addTo(covidMap)
 
-      .then(data=>{
+    //Add marker to selected country on map
+    countryMarker.bindPopup(`<u>${countryData['country']}:</u><br>
+    <b>${countryData['confirmed'].toLocaleString()} Total Cases</b><br>
+    ${countryData['active'].toLocaleString()} Active Cases<br>
+    ${countryData['critical'].toLocaleString()} Critical Cases<br>
+    ${countryData['recovered'].toLocaleString()} Recovered<br>
+    ${countryData['deaths'].toLocaleString()} Deaths
+    `)
 
-      //Pie Chart input
-      var dataPieGlobal = new google.visualization.DataTable();
-      dataPieGlobal.addColumn('string', 'Cases');
-      dataPieGlobal.addColumn('number', 'Number of Cases');
-      dataPieGlobal.addRows([
-        ['Active', result['active']],
-        ['Critical', result['critical']],
-        ['Deaths', result['deaths']],
-        ['Recovered', result['recovered']],
-      ]);
-      var optionsPieGlobal = {
-        title:'Global Infected Cases',
-        is3D:true,
-        width:320,
-        backgroundColor:{fill:'none'},
-        chartArea:{left:5,top:0,width:'75%',height:'100%'},
-        legendTextStyle:{fontSize: 12},
-        slices: [{color: '#4285F4'}, {color: '#FBBC05'}, {color: '#EA4335'}, {color: '#34A853'}],
-      };
-      var chartPieGlobal = new google.visualization.PieChart(document.getElementById('globalPieChart'));
-      google.charts.setOnLoadCallback(chartPieGlobal.draw(dataPieGlobal, optionsPieGlobal));
-      
-      });
-  }
+    //Marker display no. of cases popup
+    countryMarker.on('mouseover', function () {
+      this.openPopup();
+    });
+    countryMarker.on('mouseout', function () {
+      this.closePopup();
+    });
 
 
-  //Fetch api data by country
-  function getCountryData(country){
-    fetch(`https://disease.sh/v2/countries/${country}`)
-    .then(response => {
-      return response.json()
-    })
-    .then(data=>{
-      countryData={}
-      countryData['country']=data.country
-      countryData['flag']=data.countryInfo.flag
-      countryData['lat']=data.countryInfo.lat
-      countryData['long']=data.countryInfo.long
-      countryData['confirmed']=data.cases
-      countryData['deaths']=data.deaths
-      countryData['recovered']=data.recovered
-      countryData['active']=data.active
-      countryData['critical']=data.critical
+       //Statistics Display
+      $('#countryNameDisplay').text(countryData['country']);
+      $('#countryConfirmed').text(countryData['confirmed'].toLocaleString());
+      $('#countryActive').text(countryData['active'].toLocaleString());
+      $('#countryCritical').text(countryData['critical'].toLocaleString());
+      $('#countryRecovered').text(countryData['recovered'].toLocaleString());
+      $('#countryDeaths').text(countryData['deaths'].toLocaleString());
+      $('#countryFlag').attr('src',`${countryData['flag']}`)
 
-      //Change Map View to selected country
-      covidMap.flyTo([countryData['lat'], countryData['long']], 6);
-
-      var marker=L.marker([countryData['lat'], countryData['long']]).addTo(covidMap)
-
-      //Add marker to selected country on map
-      marker.bindPopup(`<u>${countryData['country']}:</u><br>
-      <b>${countryData['confirmed'].toLocaleString()} Total Cases</b><br>
-      ${countryData['active'].toLocaleString()} Active Cases<br>
-      ${countryData['critical'].toLocaleString()} Critical Cases<br>
-      ${countryData['recovered'].toLocaleString()} Recovered<br>
-      ${countryData['deaths'].toLocaleString()} Deaths
-      `)
-
-      //Marker display no. of cases popup
-      marker.on('mouseover', function () {
-        this.openPopup();
-      });
-      marker.on('mouseout', function () {
-        this.closePopup();
-      });
-
-
-         //Statistics Display
-        $('#countryNameDisplay').text(countryData['country']);
-        $('#countryConfirmed').text(countryData['confirmed'].toLocaleString());
-        $('#countryActive').text(countryData['active'].toLocaleString());
-        $('#countryCritical').text(countryData['critical'].toLocaleString());
-        $('#countryRecovered').text(countryData['recovered'].toLocaleString());
-        $('#countryDeaths').text(countryData['deaths'].toLocaleString());
-        $('#countryFlag').attr('src',`${countryData['flag']}`)
-
-      // Pie Chart Display of summary
-      var dataPieCountry = new google.visualization.DataTable();
-      dataPieCountry.addColumn('string', 'Cases');
-      dataPieCountry.addColumn('number', 'Number of Cases');
-      dataPieCountry.addRows([
-        ['Active', countryData['active']],
-        ['Critical', countryData['critical']],
-        ['Deaths', countryData['deaths']],
-        ['Recovered', countryData['recovered']],
-      ]);
-      var optionsPieCountry = {
-        title:`Cases in ${countryData['country']} `,
-        is3D:true,
-        width:360,
-        backgroundColor:{fill:'none'},
-        chartArea:{left:5,top:0,width:'75%',height:'100%'},
-        legendTextStyle:{fontSize: 12},
-        slices: [{color: '#4285F4'}, {color: '#FBBC05'}, {color: '#EA4335'}, {color: '#34A853'}]
-      };
-      var chartPieCountry = new google.visualization.PieChart(document.getElementById('countryPieChart'));
-      google.charts.setOnLoadCallback(chartPieCountry.draw(dataPieCountry, optionsPieCountry));
-      //Scroll HTML to Map element
-      $('html,body').animate({
-      scrollTop: $("#mapid").offset().top-90
-      },'fast');
-    })
-    
-
-    //Fetch historical data of selected country for last 90 days
-    fetch(`https://disease.sh/v2/historical/${country}?lastdays=90`)
-    .then(response => {
-      return response.json()
-    })
-    .then(data=>{
-      countryData={}
-      countryData['confirmedArray']=data.timeline.cases
-      countryData['deathsArray']=data.timeline.deaths
-      countryData['recoveredArray']=data.timeline.recovered
-
-
-       //Confirmed Cases trend Line Graph Display
-      var confirmedDataArray =[['Day', 'Total','Recovered','Deaths']]
-      for (let i=0;i<90;i++){
-        let date=Object.keys(countryData['confirmedArray'])[i]
-        let cases=countryData['confirmedArray'][Object.keys(countryData['confirmedArray'])[i]]
-        let deaths=countryData['deathsArray'][Object.keys(countryData['deathsArray'])[i]]
-        let recovered=countryData['recoveredArray'][Object.keys(countryData['recoveredArray'])[i]]
-        confirmedDataArray[i+1]=[new Date(date),parseInt(cases),parseInt(recovered),parseInt(deaths)]
-      }
-
-      var dataConfirmed = google.visualization.arrayToDataTable(confirmedDataArray);
-
-      var optionsConfirmed = {
-        title: 'TOTAL Cases',
-        legend: {position: 'bottom'},
-        backgroundColor:{fill:'none'},
-        chartArea:{width:'62%'},
-        fontSize:10,
-        series: {
-          0: { color: 'darkblue' },
-          1: { color: '#34A853' },
-          2: { color: '#EA4335' },
-        },
-        titleTextStyle: {
-          fontSize: 16
-        },
-      };
-
-      var chartConfirmed = new google.visualization.LineChart(document.getElementById('confirmedChart'));
-      google.charts.setOnLoadCallback(chartConfirmed.draw(dataConfirmed, optionsConfirmed));
-
-      
-
+    // Pie Chart Display of summary
+    var dataPieCountry = new google.visualization.DataTable();
+    dataPieCountry.addColumn('string', 'Cases');
+    dataPieCountry.addColumn('number', 'Number of Cases');
+    dataPieCountry.addRows([
+      ['Active', countryData['active']],
+      ['Critical', countryData['critical']],
+      ['Deaths', countryData['deaths']],
+      ['Recovered', countryData['recovered']],
+    ]);
+    var optionsPieCountry = {
+      title:`Cases in ${countryData['country']} `,
+      is3D:true,
+      width:360,
+      backgroundColor:{fill:'none'},
+      chartArea:{left:5,top:0,width:'75%',height:'100%'},
+      legendTextStyle:{fontSize: 12},
+      slices: [{color: '#4285F4'}, {color: '#FBBC05'}, {color: '#EA4335'}, {color: '#34A853'}]
+    };
+    var chartPieCountry = new google.visualization.PieChart(document.getElementById('countryPieChart'));
+    google.charts.setOnLoadCallback(chartPieCountry.draw(dataPieCountry, optionsPieCountry));
+    //Scroll HTML to Map element
+    $('html,body').animate({
+    scrollTop: $("#mapid").offset().top-90
+    },'fast');
+  })
+  .catch(error=>{
+    alert("API Error! Please refresh or wait for a few minutes before loading.")
+  })
   
 
-      //New Cases trend line Graph Display
-      var newDataArray = [['Day', 'Total','Recovered','Deaths']]
-      for (let i=1;i<90;i++){
-        let date=Object.keys(countryData['confirmedArray'])[i]
-        let cases=countryData['confirmedArray'][Object.keys(countryData['confirmedArray'])[i]]-countryData['confirmedArray'][Object.keys(countryData['confirmedArray'])[i-1]]
-        let deaths=countryData['deathsArray'][Object.keys(countryData['deathsArray'])[i]]-countryData['deathsArray'][Object.keys(countryData['deathsArray'])[i-1]]
-        let recovered=countryData['recoveredArray'][Object.keys(countryData['recoveredArray'])[i]]-countryData['recoveredArray'][Object.keys(countryData['recoveredArray'])[i-1]]
-        newDataArray[i]=[new Date(date),parseInt(cases),parseInt(deaths),parseInt(recovered)]
-      }
+  //Fetch historical data of selected country for last 90 days
+  fetch(`https://disease.sh/v2/historical/${country}?lastdays=90`)
+  .then(response => {
+    return response.json()
+  })
+  .then(data=>{
+    countryData={}
+    countryData['confirmedArray']=data.timeline.cases
+    countryData['deathsArray']=data.timeline.deaths
+    countryData['recoveredArray']=data.timeline.recovered
+
+
+     //Confirmed Cases trend Line Graph Display
+    var confirmedDataArray =[['Day', 'Total','Recovered','Deaths']]
+    for (let i=0;i<90;i++){
+      let date=Object.keys(countryData['confirmedArray'])[i]
+      let cases=countryData['confirmedArray'][Object.keys(countryData['confirmedArray'])[i]]
+      let deaths=countryData['deathsArray'][Object.keys(countryData['deathsArray'])[i]]
+      let recovered=countryData['recoveredArray'][Object.keys(countryData['recoveredArray'])[i]]
+      confirmedDataArray[i+1]=[new Date(date),parseInt(cases),parseInt(recovered),parseInt(deaths)]
+    }
+
+    var dataConfirmed = google.visualization.arrayToDataTable(confirmedDataArray);
+
+    var optionsConfirmed = {
+      title: 'TOTAL Cases',
+      legend: {position: 'bottom'},
+      backgroundColor:{fill:'none'},
+      chartArea:{width:'62%'},
+      fontSize:10,
+      series: {
+        0: { color: 'darkblue' },
+        1: { color: '#34A853' },
+        2: { color: '#EA4335' },
+      },
+      titleTextStyle: {
+        fontSize: 16
+      },
+    };
+
+    var chartConfirmed = new google.visualization.LineChart(document.getElementById('confirmedChart'));
+    google.charts.setOnLoadCallback(chartConfirmed.draw(dataConfirmed, optionsConfirmed));
+
     
-      var dataNew = google.visualization.arrayToDataTable(newDataArray);
-      var optionsNew = {
-        title: 'NEW Cases',
-        legend: { position: 'bottom' },
-        backgroundColor:{fill:'none'},
-        chartArea:{width:'62%'},
-        fontSize:10,
-        series: {
-          0: { color: 'darkblue' },
-          1: { color: '#34A853' },
-          2: { color: '#EA4335' },
-        },
-        titleTextStyle: {
-          fontSize: 16,
-        },
-      }
-      var chartNew = new google.visualization.LineChart(document.getElementById('newChart'));
-      google.charts.setOnLoadCallback(chartNew.draw(dataNew, optionsNew));
 
-    })
-  }
+
+
+    //New Cases trend line Graph Display
+    var newDataArray = [['Day', 'Total','Recovered','Deaths']]
+    for (let i=1;i<90;i++){
+      let date=Object.keys(countryData['confirmedArray'])[i]
+      let cases=countryData['confirmedArray'][Object.keys(countryData['confirmedArray'])[i]]-countryData['confirmedArray'][Object.keys(countryData['confirmedArray'])[i-1]]
+      let deaths=countryData['deathsArray'][Object.keys(countryData['deathsArray'])[i]]-countryData['deathsArray'][Object.keys(countryData['deathsArray'])[i-1]]
+      let recovered=countryData['recoveredArray'][Object.keys(countryData['recoveredArray'])[i]]-countryData['recoveredArray'][Object.keys(countryData['recoveredArray'])[i-1]]
+      newDataArray[i]=[new Date(date),parseInt(cases),parseInt(recovered),parseInt(deaths)]
+    }
   
+    var dataNew = google.visualization.arrayToDataTable(newDataArray);
+    var optionsNew = {
+      title: 'NEW Cases',
+      legend: { position: 'bottom' },
+      backgroundColor:{fill:'none'},
+      chartArea:{width:'62%'},
+      fontSize:10,
+      series: {
+        0: { color: 'darkblue' },
+        1: { color: '#34A853' },
+        2: { color: '#EA4335' },
+      },
+      titleTextStyle: {
+        fontSize: 16,
+      },
+    }
+    var chartNew = new google.visualization.LineChart(document.getElementById('newChart'));
+    google.charts.setOnLoadCallback(chartNew.draw(dataNew, optionsNew));
+
+  })
+  .catch(error=>{
+    alert("API Error! Please refresh or wait for a few minutes before loading.")
+  })
+}
 
 
-  //News Carousel
-  function getNews(){
-    fetch('https://newsapi.org/v2/top-headlines?q=coronavirus&language=en&sortBy=popularity&apiKey=5a45e2dfd22f412fbdbc3139ce8d3b37')
-    .then((response) => {
-      return response.json();
-    })
-    .then((data) => {
-      let n=0 //Index of article number from API
-      let c=0 //Counter to check total of 3 articles
-      
-      while (c<3){
-        //If Article has no title or Source Name or has same title as next article, skip to next article
-        if((data.articles[n].source.name==null) || (data.articles[n].title)==null || ((data.articles[n].title)==data.articles[n+1].title)){
-          n=n+1;
-        }
-        else{
-          $(`#img${n}`).attr('src',data.articles[n].urlToImage);
-          $(`#caption${n}`).text(data.articles[n].source.name);
-          $(`#description${n}`).text(data.articles[n].title);
-          $(`#img${n}Link`).attr('href',data.articles[n].url);
-          $(`#newsImage${n}`).attr('src',data.articles[n].urlToImage);
-          $(`#newsHead${n}`).text(data.articles[n].source.name);
-          $(`#newsContent${n}`).text(data.articles[n].title);
-          $(`#newsLink${n}`).attr('href',data.articles[n].url);
-          n=n+1;
-          c=c+1;
-        }
+
+//News Carousel
+function getNews(){
+  fetch('https://newsapi.org/v2/top-headlines?q=coronavirus&language=en&sortBy=popularity&apiKey=5a45e2dfd22f412fbdbc3139ce8d3b37')
+  .then((response) => {
+    return response.json();
+  })
+  .then((data) => {
+    let n=0 //Index of article number from API
+    let c=0 //Counter to check total of 3 articles
+    
+    while (c<3){
+      //If Article has no title or Source Name or has same title as next article, skip to next article
+      if((data.articles[n].source.name==null) || (data.articles[n].title)==null || (data.articles[n].title == data.articles[n+1].title)){
+        n=n+1;
       }
-    })
-  }
+      else{
+        $(`#img${c}`).attr('src',data.articles[n].urlToImage);
+        $(`#caption${c}`).text(data.articles[n].source.name);
+        $(`#description${c}`).text(data.articles[n].title);
+        $(`#img${c}Link`).attr('href',data.articles[n].url);
+        $(`#newsImage${c}`).attr('src',data.articles[n].urlToImage);
+        $(`#newsHead${c}`).text(data.articles[n].source.name);
+        $(`#newsContent${c}`).text(data.articles[n].title);
+        $(`#newsLink${c}`).attr('href',data.articles[n].url);
+        n=n+1;
+        c=c+1;
+      }
+    }
+  })
+  .catch(error=>{
+    alert("API Error! Please refresh or wait for a few minutes before loading.")
+  })
+}
 });
 

@@ -295,10 +295,11 @@ function getNews(){
     
     while (c<3){
       //If Article has no title or Source Name or has same title as next article, skip to next article
-      if((data.articles[n].source.name==null) || (data.articles[n].title)==null || (data.articles[n].title == data.articles[n+1].title)){
+      if((data.articles[n].source.name==null) || (data.articles[n].title)==null || (data.articles[n].urlToImage)=="" ||(data.articles[n].title == data.articles[n+1].title)){
         n=n+1;
       }
       else{
+        console.log(data)
         $(`#img${c}`).attr('src',data.articles[n].urlToImage);
         $(`#caption${c}`).text(data.articles[n].source.name);
         $(`#description${c}`).text(data.articles[n].title);

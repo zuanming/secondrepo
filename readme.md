@@ -1,5 +1,5 @@
 # COVID-19 Statistics
-### Data-Centric Development Project (Code Institute)
+### Interactive Frontend Development Project (Code Institute)
 
 This project is built as a webpage for current global COVID-19 key statistics.
 

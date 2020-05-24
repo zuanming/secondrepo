@@ -87,7 +87,7 @@ GitHub was used to hose to deploy the website, using GitHub to host the project 
 ## Credits
 This website was built using tools and data from various sources, including but not limited to the following:
 
-* News API is obtained from [https://newsapi.org](https://newsapi.org). The API allows users to receive the latest news from various sources and can be sorted by region, category etc.
+* News API is obtained from [https://gnews.io](https://gnews.io). The API allows users to receive the latest news from various sources and can be sorted by region, category etc.
 
 * Background image was obtained from [Unsplash](https://unsplash.com/photos/w9KEokhajKw), provided by [Centers for Disease Control and Prevention (CDC)](https://www.cdc.gov).
 

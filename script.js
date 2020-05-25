@@ -285,34 +285,28 @@ $(document).ready(function(){
 
   //Get News Carousel & News Snippet
   function getNews(){
-    fetch('https://gnews.io/api/v3/search?q=covid-19&token=7a1158b8c4eef0205dc3fcf34d380032&lang=en&image=required')
+    fetch('https://zmnews.cognitiveservices.azure.com/bing/v7.0/news/search?setLang=en&count=10&originalImg=true&q=covid-19',{
+      headers: {
+        "Ocp-Apim-Subscription-Key": "5476858e0a8c47138a09dd9a0bb1d4dc"
+      }
+    })
     .then((response) => {
       return response.json();
     })
     .then((data) => {
-      let n=0 //Index of article number from API
-      let c=0 //Counter to check total of 3 articles
-      
-      while (c<3){
-
-        // If Article has no title or Source Name or has same title as next article, skip to next article
-        if((data.articles[n].source.name==null) || (data.articles[n].title)==null || (data.articles[n].title == data.articles[n+1].title)){
-          n=n+1;
+      let n=0;
+        for(let n=0;n<3;n++){
+          console.log(data.value[n])
+          $(`#img${n}`).attr('src',data.value[n].image.contentUrl);
+          $(`#caption${n}`).text(data.value[n].provider[0].name);
+          $(`#description${n}`).text(data.value[n].name);
+          $(`#img${n}Link`).attr('href',data.value[n].image.contentUrl);
+          $(`#news${n}Link`).attr('href',data.value[n].url);
+          $(`#newsImage${n}`).attr('src',data.value[n].image.contentUrl);
+          $(`#newsHead${n}`).text(data.value[n].provider[0].name);
+          $(`#newsContent${n}`).text(data.value[n].name);
+          $(`#newsLink${n}`).attr('href',data.value[n].url);
         }
-        else{
-          $(`#img${c}`).attr('src',data.articles[n].image);
-          $(`#caption${c}`).text(data.articles[n].source.name);
-          $(`#description${c}`).text(data.articles[n].title);
-          $(`#img${c}Link`).attr('href',data.articles[n].url);
-          $(`#news${c}Link`).attr('href',data.articles[n].url);
-          $(`#newsImage${c}`).attr('src',data.articles[n].image);
-          $(`#newsHead${c}`).text(data.articles[n].source.name);
-          $(`#newsContent${c}`).text(data.articles[n].title);
-          $(`#newsLink${c}`).attr('href',data.articles[n].url);
-          n=n+1;
-          c=c+1;
-        }
-      }
     })
     .catch(error=>{
       alert("News API Error! Please refresh or wait for a few minutes before loading.")

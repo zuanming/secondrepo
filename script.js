@@ -209,7 +209,7 @@ $(document).ready(function(){
     
 
     //Fetch historical data of selected country for last 90 days
-    fetch(`https://disease.sh/v2/historical/${country}?lastdays=90`)
+    fetch(`https://disease.sh/v2/historical/${country}?lastdays=180`)
     .then(response => {
       return response.json()
     })

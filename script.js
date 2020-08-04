@@ -221,7 +221,7 @@ $(document).ready(function(){
 
       //Confirmed Cases trend Line Graph Display
       var confirmedDataArray =[['Day', 'Total','Recovered','Deaths']]
-      for (let i=0;i<90;i++){
+      for (let i=0;i<180;i++){
         let date=Object.keys(countryData['confirmedArray'])[i]
         let cases=countryData['confirmedArray'][Object.keys(countryData['confirmedArray'])[i]]
         let deaths=countryData['deathsArray'][Object.keys(countryData['deathsArray'])[i]]
@@ -250,7 +250,7 @@ $(document).ready(function(){
 
       //New Cases trend line Graph Display
       var newDataArray = [['Day', 'Total','Recovered','Deaths']]
-      for (let i=1;i<90;i++){
+      for (let i=1;i<180;i++){
         let date=Object.keys(countryData['confirmedArray'])[i]
         let cases=countryData['confirmedArray'][Object.keys(countryData['confirmedArray'])[i]]-countryData['confirmedArray'][Object.keys(countryData['confirmedArray'])[i-1]]
         let deaths=countryData['deathsArray'][Object.keys(countryData['deathsArray'])[i]]-countryData['deathsArray'][Object.keys(countryData['deathsArray'])[i-1]]

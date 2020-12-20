@@ -48,7 +48,7 @@ $(document).ready(function(){
           color: 'red',
           fillColor: '#f03',
           fillOpacity: 0.5,
-          radius: countryCases,
+          radius: countryCases/5,
         }).addTo(covidMap)
 
         circle.bindPopup(`<u>${countryName}:</u><br>

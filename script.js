@@ -44,7 +44,7 @@ $(document).ready(function(){
         let countryLat=data[i].countryInfo.lat
         let countryLong=data[i].countryInfo.long
         let countryCases=data[i].cases
-        let circleRadius = countryCases/20
+        let circleRadius = countryCases/5
         var circle=L.circle([countryLat, countryLong], {
           color: 'red',
           fillColor: '#f03',
